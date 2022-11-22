@@ -1,0 +1,1 @@
+22.11.2022 : React Frontend initialized / Csv to Sql Code for person table implemented
