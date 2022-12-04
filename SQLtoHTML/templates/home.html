@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pedesterian Data</title>
+  </head>
+  <body>
+    <h1>Data</h1>
+    <p>Deneme1</p>
+    <table id="1">
+        <tr>
+        {% for i in range(col_num) %}
+        <td> {{ header[i] }}  *</td>
+        {% endfor %}
+        </tr> 
+          {% for i in range(100) %} <!--Print out the 10 rows of data excluding the first line-->
+          <tr>
+            {% for j in range(col_num) %}
+            <td> {{ rows[i][j] }}</td>
+            {% endfor %}
+          </tr> 
+          {% endfor %}
+        </table>
+  
+  </body>
+</html>
