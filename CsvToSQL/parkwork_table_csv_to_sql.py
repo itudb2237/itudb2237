@@ -47,8 +47,8 @@ if __name__ == "__main__":
 
     ## query 2 ##
     statement = """CREATE TABLE ParkWork (
-        st_case INTEGER NOT NULL REFERENCES Accident(st_case),
-        veh_no INTEGER NOT NULL,
+        st_case INTEGER NOT NULL UNIQUE REFERENCES Accident(st_case),
+        veh_no INTEGER NOT NULL UNIQUE,
         pharm_ev INTEGER NOT NULL,
         pcargtype INTEGER NOT NULL DEFAULT 0,
         psp_use INTEGER NOT NULL DEFAULT 0,
