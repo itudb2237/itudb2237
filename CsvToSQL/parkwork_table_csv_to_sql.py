@@ -47,14 +47,14 @@ if __name__ == "__main__":
 
     ## query 2 ##
     statement = """CREATE TABLE ParkWork (
-        st_case INTEGER NOT NULL UNIQUE REFERENCES Accident(st_case),
-        veh_no INTEGER NOT NULL UNIQUE,
-        pharm_ev INTEGER NOT NULL,
-        pcargtype INTEGER NOT NULL DEFAULT 0,
-        psp_use INTEGER NOT NULL DEFAULT 0,
-        pveh_sev INTEGER NOT NULL DEFAULT 0,
-        pdeaths INTEGER NOT NULL DEFAULT 0,
-        PRIMARY KEY (st_case, veh_no)
+        ST_CASE INTEGER NOT NULL REFERENCES Accident(ST_CASE),
+        VEH_NO INTEGER NOT NULL,
+        PHARM_EV INTEGER NOT NULL,
+        PCARGTYPE INTEGER NOT NULL DEFAULT 0,
+        PSP_USE INTEGER NOT NULL DEFAULT 0,
+        PVEH_SEV INTEGER NOT NULL DEFAULT 0,
+        PDEATHS INTEGER NOT NULL DEFAULT 0,
+        PRIMARY KEY (ST_CASE, VEH_NO)
     )"""
 
     cursor.execute(statement)
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     ## query 3 ##
     for i in range(len(content)):
-        statement = """INSERT INTO ParkWork (st_case, veh_no, pharm_ev, pcargtype, psp_use, pveh_sev, pdeaths) VALUES (?,?,?,?,?,?,?)"""
+        statement = """INSERT INTO ParkWork (ST_CASE, VEH_NO, PHARM_EV, PCARGTYPE, PSP_USE, PVEH_SEV, PDEATHS) VALUES (?,?,?,?,?,?,?)"""
         cursor.execute(statement, (int(content.iloc[i]['ST_CASE']), int(content.iloc[i]['VEH_NO']), int(content.iloc[i]['PHARM_EV']), int(content.iloc[i]['PCARGTYP']), int(content.iloc[i]['PSP_USE']), int(content.iloc[i]['PVEH_SEV']), int(content.iloc[i]['PDEATHS'])))
     #############
 
