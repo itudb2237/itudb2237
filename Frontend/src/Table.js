@@ -1,3 +1,7 @@
+let tableStyle = {
+    width: '100%',
+}
+
 let headerStyle = {
     backgroundColor: '#f5f5f5',
     color: '#000',
@@ -13,18 +17,21 @@ let headerCellStyle = {
     textAlign: 'center',
     resize: "horizontal",
     overflow: "auto",
-    minWidth: "33%"
+    position: "sticky"
 }
 
 export function Table(props){
     let header = props.header;
     let data = props.data;
     return (
-        <table>
+        <table style={tableStyle}>
             <thead style={headerStyle}>
                 <tr>
                 {header.map((i) => <th style={headerCellStyle} key={i}>{i}</th>)}
                 </tr>
             </thead>
+            <tbody>
+                {data.map((i) => <tr key={i}>{header.map((j) => <td key={j}>{i[j]}</td>)}</tr>)}
+            </tbody>
         </table>);
 }
