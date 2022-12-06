@@ -1,4 +1,4 @@
 22.11.2022 : React Frontend initialized / Csv to Sql Code for person table implemented
 25.11.2022 : Mappings for all fields completed.
 5.12.2022 : Header Component implemented.
-6.12.2022 : Routing for multiple pages implemented. / Templates for all pages created.
+6.12.2022 : Routing for multiple pages implemented. / Templates for all pages created. / Table Component implemented.
