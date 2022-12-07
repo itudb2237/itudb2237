@@ -1,1 +1,2 @@
 17.11.2022: Csv to SQL conversion for table Cevent is implemented.
+7.12.2022: Insert, Update and Get queries for table Cevent is implemented.
