@@ -12,7 +12,7 @@ def getPeople():
     pagenumber = request.args.get('pageNumber', default=1, type=int)
 
     count = db.executeSQLQuery("SELECT COUNT(*) FROM Person").fetchone()[0]
-    print(int((count+rowperpage - 1)/rowperpage), ((count)/rowperpage))
+
     results = {
         "data": db.executeSQLQuery(f"SELECT * FROM PERSON LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}").fetchall(),
         "header": [i[1] for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()],
