@@ -7,9 +7,12 @@ import TableConverters.PersonTableConverter as PersonTableConverter
 @app.route('/getPeople')
 def hello():
 
+    count = db.executeSQLQuery("SELECT COUNT(*) FROM Person").fetchone()[0]
+
     results = {
-        "data": db.executeSQLQuery("SELECT * FROM PERSON").fetchall(),
-        "header": [i[1] for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()]
+        "data": db.executeSQLQuery("SELECT * FROM PERSON LIMIT 100").fetchall(),
+        "header": [i[1] for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()],
+        "maxPageCount": int((count+99)/100)
     }
     response = make_response(results)
     response.headers['Access-Control-Allow-Origin'] = '*'
