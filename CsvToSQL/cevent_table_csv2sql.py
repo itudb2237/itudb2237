@@ -159,8 +159,7 @@ for row in cevent:
         row["VNUMBER2"] = "\"Non-Harmful Event\""
     if row["VNUMBER2"] == '9999':
         row["VNUMBER2"] = "\"Not a Motor Vehicle\""
-    cursor.execute("INSERT INTO CEVENT VALUES (?, ?, ?, ?, ?, ?, ?)",
-    (row['ST_CASE'], row['EVENTNUM'], row['VNUMBER1'], ValueMappings["AOI1"][row['AOI1']], ValueMappings["SOE"][row['SOE']], row['VNUMBER2'], ValueMappings["AOI2"][row['AOI2']]))
+    cursor.execute(f"INSERT INTO CEVENT VALUES ({row['ST_CASE']}, {row['EVENTNUM']}, {row['VNUMBER1']}, {ValueMappings['AOI1'][row['AOI1']]}, {ValueMappings['SOE'][row['SOE']]}, {row['VNUMBER2']}, {ValueMappings['AOI2'][row['AOI2']]})")
 
 db.commit()
 db.close()
