@@ -1,11 +1,12 @@
 import {useRef} from "react";
 
-export function PageNumber(props) {
-    let inputRef = useRef(null);
+export function PageManager(props) {
+    let pageNumberRef = useRef(null);
+    let entryPerPageRef = useRef(null);
     return (
         <div>
             {props.page > 1 && <button onClick={() => {
-                inputRef.current.value = props.page - 1;
+                pageNumberRef.current.value = props.page - 1;
                 props.setPage(props.page - 1);
             }} >Previous Page</button>}
             <input
@@ -26,15 +27,27 @@ export function PageNumber(props) {
                         props.setPage(Number(event.target.value));
                     }
                 }}
-                ref={inputRef}
+                ref={pageNumberRef}
             />
             <p style={{display: "inline"}}>
                 {"/" + props.pageCount}
             </p>
             {props.page < props.pageCount && <button onClick={() => {
-                inputRef.current.value = props.page + 1;
+                pageNumberRef.current.value = props.page + 1;
                 props.setPage(props.page + 1);
             }}>Next Page</button>}
+            <p style={{display: "inline", float: "right"}}>Entries per Page: </p>
+            <input
+                style={{display: "inline", float: "right"}}
+                type={"number"}
+                id={"EntryPerPageField"}
+                name={"EntryPerPage"}
+                defaultValue={props.entryPerPage}
+                onBlur={(event) => {
+                    props.setEntryPerPage(Number(event.target.value));
+                }}
+                ref={entryPerPageRef}
+            />
         </div>
     );
 }
