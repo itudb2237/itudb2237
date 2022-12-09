@@ -1,11 +1,12 @@
 from flask import Flask
-import sqlite3 
+import sqlite3
+from Database import Database
 
 
 if __name__ == "__main__":
     app = Flask(__name__)
 
-    db = sqlite3.connect("database.sql")
+    db = Database("database.db")
 
     import personapi
 
