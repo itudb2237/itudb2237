@@ -2,3 +2,6 @@
 25.11.2022 : Mappings for all fields completed.
 5.12.2022 : Header Component implemented.
 6.12.2022 : Routing for multiple pages implemented. / Templates for all pages created. / Table Component implemented.
+9.12.2022 : Writen a flask function which returns all the rows in my table and the headers (column names). /
+ 		In frontend, implemented fetching the data from backend and table component to display the data from the flask. /
+ 		 Limited rows per page to 100. (Curently unfunctional feature but will be implemented in the future)

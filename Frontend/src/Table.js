@@ -31,7 +31,7 @@ export function Table(props){
                 </tr>
             </thead>
             <tbody>
-                {data.map((i) => <tr key={i}>{header.map((j) => <td key={j}>{i[j]}</td>)}</tr>)}
+                {data.map((v, i) => <tr key={i}>{v.map((j, i2) => <td key={String(i) + "." + i2}>{j}</td>)}</tr>)}
             </tbody>
         </table>);
 }
