@@ -152,7 +152,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS CEVENT (
     CONSTRAINT PK_CEVENT PRIMARY KEY (CASE_NUMBER, EVENT_NUMBER));
     ''')
 
-# later CASE_NUMBER should be foreign key referencing Accident table
+# later CASE_NUMBER should be foreign key referencing CASE_NUMBER in Accident table
+# later (CASE_NUMBER AND VEHICLE_NUMBER_1) and (CASE_NUMBER AND VEHICLE_NUMBER_2) should be foreign key referencing CASE_NUMBER AND VEHICLE_NUMBER in Vehicle table
 
 for row in cevent:
     if row["VNUMBER2"] == '5555':
