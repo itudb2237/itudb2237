@@ -65,7 +65,7 @@ print(create_table)
 cursor.execute(create_table)
 
 # csv file content to pandas data frame
-df = pd.read_csv("FARS2015PuertoRicoCSV_pbtype.csv")
+df = pd.read_csv("FARS2015NationalCSV_pbtype.csv")
 content = df[['ST_CASE', 'VEH_NO', 'PER_NO', 'PBPTYPE', 'PBCWALK', 'PBSWALK', 'PBSZONE', 'MOTMAN']]
 attribute_number = len(content.columns)
 tuple_number = len(content) 
