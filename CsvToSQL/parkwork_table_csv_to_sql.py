@@ -200,8 +200,9 @@ if __name__ == "__main__":
 
     ## query 3 ##
     for i in range(len(content)):
-        statement = """INSERT INTO ParkWork (CASE_NUMBER, VEHICLE_NUMBER, FIRST_HARMFUL_EVENT, CARGO_BODY_TYPE, SPECIAL_USE, EXTENT_OF_DAMAGE, DEATHS) VALUES (?,?,?,?,?,?,?)"""
-        cursor.execute(statement, (int(content[i]['ST_CASE']), int(content[i]['VEH_NO']), content[i]['PHARM_EV'], content[i]['PCARGTYP'], content[i]['PSP_USE'], content[i]['PVEH_SEV'], int(content[i]['PDEATHS'])))
+        statement = f"""INSERT INTO PARKWORK (CASE_NUMBER, VEHICLE_NUMBER, FIRST_HARMFUL_EVENT, CARGO_BODY_TYPE, SPECIAL_USE, EXTENT_OF_DAMAGE, DEATHS) VALUES ({int(content[i]['ST_CASE'])}, {int(content[i]['VEH_NO'])}, {content[i]['PHARM_EV']}, {content[i]['PCARGTYP']}, {content[i]['PSP_USE']}, {content[i]['PVEH_SEV']}, {int(content[i]['PDEATHS'])})"""
+        
+        cursor.execute(statement)
     #############
 
     ##########################################################################################
