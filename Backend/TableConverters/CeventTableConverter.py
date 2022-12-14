@@ -1,12 +1,6 @@
 import csv
 import sqlite3
 
-db = sqlite3.connect("cevent.db")
-
-cevent = csv.DictReader(open("cevent.csv"))
-
-cursor = db.cursor()
-
 ValueMappings = {"AOI1": {"0": "\"Non-Collision\"",
                          "1": "\"1 o'clock\"",
                          "2": "\"2 o'clock\"",
@@ -138,29 +132,36 @@ ValueMappings = {"AOI1": {"0": "\"Non-Collision\"",
                  }
                  }
 
-statement0 = '''DROP TABLE IF EXISTS CEVENT'''
-cursor.execute(statement0)
+def createAndFillCeventTable(database):
+    connection = sqlite3.connect(database.db)
+    cursor = connection.cursor()
+    cevent = csv.DictReader(open("./TableConverters/cevent.csv"))
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS CEVENT (
-    CASE_NUMBER INTEGER NOT NULL,
-    EVENT_NUMBER INTEGER NOT NULL,
-    VEHICLE_NUMBER_1 INTEGER NOT NULL,
-    AREA_OF_IMPACT_1 VARCHAR(100),
-    SOE VARCHAR(200),
-    VEHICLE_NUMBER_2 INTEGER NOT NULL,
-    AREA_OF_IMPACT_2 VARCHAR(100),
-    CONSTRAINT PK_CEVENT PRIMARY KEY (CASE_NUMBER, EVENT_NUMBER));
-    ''')
+    statement0 = '''DROP TABLE IF EXISTS CEVENT'''
+    cursor.execute(statement0)
 
-# later CASE_NUMBER should be foreign key referencing CASE_NUMBER in Accident table
-# later (CASE_NUMBER AND VEHICLE_NUMBER_1) and (CASE_NUMBER AND VEHICLE_NUMBER_2) should be foreign key referencing CASE_NUMBER AND VEHICLE_NUMBER in Vehicle table
+    cursor.execute('''CREATE TABLE IF NOT EXISTS CEVENT (
+        CASE_NUMBER INTEGER NOT NULL,
+        EVENT_NUMBER INTEGER NOT NULL,
+        VEHICLE_NUMBER_1 INTEGER NOT NULL,
+        AREA_OF_IMPACT_1 VARCHAR(100),
+        SEQUENCE_OF_EVENTS VARCHAR(200),
+        VEHICLE_NUMBER_2 INTEGER NULL,
+        AREA_OF_IMPACT_2 VARCHAR(100),
+        CONSTRAINT PK_CEVENT PRIMARY KEY (CASE_NUMBER, EVENT_NUMBER));
+        ''')
 
-for row in cevent:
-    if row["VNUMBER2"] == '5555':
-        row["VNUMBER2"] = "\"Non-Harmful Event\""
-    if row["VNUMBER2"] == '9999':
-        row["VNUMBER2"] = "\"Not a Motor Vehicle\""
-    cursor.execute(f"INSERT INTO CEVENT VALUES ({row['ST_CASE']}, {row['EVENTNUM']}, {row['VNUMBER1']}, {ValueMappings['AOI1'][row['AOI1']]}, {ValueMappings['SOE'][row['SOE']]}, {row['VNUMBER2']}, {ValueMappings['AOI2'][row['AOI2']]})")
+    # later CASE_NUMBER should be foreign key referencing CASE_NUMBER in Accident table
+    # later (CASE_NUMBER AND VEHICLE_NUMBER_1) and (CASE_NUMBER AND VEHICLE_NUMBER_2) should be foreign key referencing CASE_NUMBER AND VEHICLE_NUMBER in Vehicle table
 
-db.commit()
-db.close()
+    for row in cevent:
+        if row["VNUMBER2"] == '5555':
+            row["VNUMBER2"] = "NULL"
+        if row["VNUMBER2"] == '9999':
+            row["VNUMBER2"] = "NULL"
+        cursor.execute(f"INSERT INTO CEVENT VALUES ({row['ST_CASE']}, {row['EVENTNUM']}, {row['VNUMBER1']}, {ValueMappings['AOI1'][row['AOI1']]}, {ValueMappings['SOE'][row['SOE']]}, {row['VNUMBER2']}, {ValueMappings['AOI2'][row['AOI2']]})")
+
+
+    connection.commit()
+    connection.close()
+
