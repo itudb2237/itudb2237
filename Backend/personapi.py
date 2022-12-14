@@ -3,19 +3,23 @@ from __main__ import app, db
 from flask import make_response, request
 import TableConverters.PersonTableConverter as PersonTableConverter
 
+personFieldNames = [i[1] for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()]
 
-@app.route('/getPerson', methods=['GET'])
+
+@app.route('/getPeople', methods=['GET'])
 def getPeople():
 
     rowperpage = request.args.get('rowPerPage', default=100, type=int)
 
     pagenumber = request.args.get('pageNumber', default=1, type=int)
 
+    requestedFields = request.args.get('fieldFilter', default=",".join(personFieldNames), type=str).split(",")
+
     count = db.executeSQLQuery("SELECT COUNT(*) FROM Person").fetchone()[0]
 
     results = {
-        "data": db.executeSQLQuery(f"SELECT * FROM PERSON LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}").fetchall(),
-        "header": [i[1] for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()],
+        "data": db.executeSQLQuery(f"SELECT {', '.join(requestedFields)} FROM PERSON LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}").fetchall(),
+        "header": requestedFields,
         "maxPageCount": int((count+rowperpage - 1)/rowperpage)
     }
     response = make_response(results)
@@ -51,6 +55,7 @@ def getPerson(case_number, vehicle_number, person_number):
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return response
+
 
 @app.route('/addPerson', methods=['POST'])
 def addPerson():
