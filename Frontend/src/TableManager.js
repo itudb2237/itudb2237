@@ -1,10 +1,10 @@
 import {useRef} from "react";
 
-export function PageManager(props) {
+export function TableManager(props) {
     let pageNumberRef = useRef(null);
     let entryPerPageRef = useRef(null);
     return (
-        <div>
+        <>
             {props.page > 1 && <button onClick={() => {
                 pageNumberRef.current.value = props.page - 1;
                 props.setPage(props.page - 1);
@@ -36,18 +36,23 @@ export function PageManager(props) {
                 pageNumberRef.current.value = props.page + 1;
                 props.setPage(props.page + 1);
             }}>Next Page</button>}
-            <p style={{display: "inline", float: "right"}}>Entries per Page: </p>
-            <input
-                style={{display: "inline", float: "right"}}
-                type={"number"}
-                id={"EntryPerPageField"}
-                name={"EntryPerPage"}
-                defaultValue={props.entryPerPage}
-                onBlur={(event) => {
-                    props.setEntryPerPage(Number(event.target.value));
-                }}
-                ref={entryPerPageRef}
-            />
-        </div>
+            <div style={{display: "inline"}}>
+                {props.children}
+            </div>
+            <div style={{float: "right"}}>
+                <p style={{display: "inline"}}>Entries per Page: </p>
+                <input
+                    style={{display: "inline"}}
+                    type={"number"}
+                    id={"EntryPerPageField"}
+                    name={"EntryPerPage"}
+                    defaultValue={props.entryPerPage}
+                    onBlur={(event) => {
+                        props.setEntryPerPage(Number(event.target.value));
+                    }}
+                    ref={entryPerPageRef}
+                />
+            </div>
+        </>
     );
 }
