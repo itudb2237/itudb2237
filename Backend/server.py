@@ -9,5 +9,6 @@ if __name__ == "__main__":
     db = Database("database.db")
 
     import personapi
+    import parkworkapi
 
     app.run(host='0.0.0.0', port=5000)
