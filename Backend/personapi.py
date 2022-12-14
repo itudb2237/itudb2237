@@ -19,7 +19,8 @@ def getPeople():
 
     results = {
         "data": db.executeSQLQuery(f"SELECT {', '.join(requestedFields)} FROM PERSON LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}").fetchall(),
-        "header": requestedFields,
+        "requestedHeaders": requestedFields,
+        "allHeaders": personFieldNames,
         "maxPageCount": int((count+rowperpage - 1)/rowperpage)
     }
     response = make_response(results)
