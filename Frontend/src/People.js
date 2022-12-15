@@ -35,33 +35,10 @@ export function People(){
                 setPage={setPage}
                 entryPerPage={entryPerPage}
                 setEntryPerPage={setEntryPerPage}
-            >
-                <div
-                    style={{display: "inline-block", outline: "none"}}
-                    onMouseEnter={() => document.getElementById("headerselect").style.display = "block"}
-                    onMouseLeave={() => document.getElementById("headerselect").style.display = "none"}
-                >
-                    <button>
-                        Selected Headers
-                    </button>
-                    <div id={"headerselect"} style={{position: "absolute", display: "none", zIndex: "1", backgroundColor: '#f5f5f5'}}>
-                        {Object.keys(columns).map((i) =>
-                            <div key={i + "_selection_row"}>
-                                <input
-                                    type={"checkbox"}
-                                    id={i + "_checkbox"}
-                                    key={i + "_checkbox"}
-                                    checked={requestedColumns.some(a => a == i)}
-                                    onChange={(event) => setRequestedColumns(
-                                        event.target.checked ?
-                                            Object.keys(columns).filter(a => requestedColumns.some(b => b == a) || a == i) : requestedColumns.filter(a => a != i)
-                                    )}
-                                />
-                                <label>{i}</label>
-                            </div>)}
-                    </div>
-                </div>
-            </TableManager>
+                allColumns={Object.keys(columns)}
+                requestedColumns={requestedColumns}
+                setRequestedColumns={setRequestedColumns}
+            />
             <Table
                 header={requestedColumns}
                 data={response.data}
