@@ -3,7 +3,7 @@ from __main__ import app, db
 from flask import make_response, request
 import TableConverters.PersonTableConverter as PersonTableConverter
 
-personFieldNames = {i[1]: {"type": i[2]} for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()}
+personFieldNames = [{"name": i[1], "type": i[2]} for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()]
 
 
 @app.route('/getPersonHeader', methods=['GET'])
@@ -22,12 +22,13 @@ def getPeople():
 
     pagenumber = request.args.get('pageNumber', default=1, type=int)
 
-    requestedColumns = request.args.get('requestedColumns', default=",".join(personFieldNames), type=str).split(",")
+    requestedcolumns = request.args.get('requestedColumns', default=",".join(map(lambda x: x["name"], personFieldNames))
+                                        , type=str).split(",")
 
     count = db.executeSQLQuery("SELECT COUNT(*) FROM Person").fetchone()[0]
 
     results = {
-        "data": db.executeSQLQuery(f"SELECT {', '.join(requestedColumns)} FROM PERSON LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}").fetchall(),
+        "data": db.executeSQLQuery(f"SELECT {', '.join(requestedcolumns)} FROM PERSON LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}").fetchall(),
         "maxPageCount": int((count+rowperpage - 1)/rowperpage)
     }
     response = make_response(results)
