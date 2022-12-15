@@ -8,6 +8,12 @@ if __name__ == "__main__":
 
     db = Database("database.db")
 
+    statement = """CREATE TABLE IF NOT EXISTS LOG (
+        IP VARCHAR(20) NOT NULL,
+        DATE_TIME DATETIME NOT NULL
+    )"""
+    db.executeSQLQuery(statement)
+
     import personapi
     import parkworkapi
 
