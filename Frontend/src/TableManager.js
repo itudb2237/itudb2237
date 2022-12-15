@@ -1,4 +1,5 @@
 import {useRef} from "react";
+import {DropdownMenu} from "./DropdownMenu";
 
 export function TableManager(props) {
     let pageNumberRef = useRef(null);
@@ -36,31 +37,22 @@ export function TableManager(props) {
                 pageNumberRef.current.value = props.page + 1;
                 props.setPage(props.page + 1);
             }}>Next Page</button>}
-            <div
-                style={{display: "inline-block", outline: "none"}}
-                onMouseEnter={() => document.getElementById("headerselect").style.display = "block"}
-                onMouseLeave={() => document.getElementById("headerselect").style.display = "none"}
-            >
-                <button>
-                    Selected Headers
-                </button>
-                <div id={"headerselect"} style={{position: "absolute", display: "none", zIndex: "1", backgroundColor: '#f5f5f5'}}>
-                    {props.allColumns.map((i) =>
-                        <div key={i + "_selection_row"}>
-                            <input
-                                type={"checkbox"}
-                                id={i + "_checkbox"}
-                                key={i + "_checkbox"}
-                                checked={props.requestedColumns.some(a => a == i)}
-                                onChange={(event) => props.setRequestedColumns(
-                                    event.target.checked ?
-                                        props.allColumns.filter(a => props.requestedColumns.some(b => b == a) || a == i) : props.requestedColumns.filter(a => a != i)
-                                )}
-                            />
-                            <label>{i}</label>
-                        </div>)}
-                </div>
-            </div>
+            <DropdownMenu name={"Selected Headers"}>
+                {props.allColumns.map((i) =>
+                    <div key={i + "_selection_row"}>
+                        <input
+                            type={"checkbox"}
+                            id={i + "_checkbox"}
+                            key={i + "_checkbox"}
+                            checked={props.requestedColumns.some(a => a == i)}
+                            onChange={(event) => props.setRequestedColumns(
+                                event.target.checked ?
+                                    props.allColumns.filter(a => props.requestedColumns.some(b => b == a) || a == i) : props.requestedColumns.filter(a => a != i)
+                            )}
+                        />
+                        <label>{i}</label>
+                    </div>)}
+            </DropdownMenu>
             <div style={{display: "inline"}}>
                 {props.children}
             </div>
