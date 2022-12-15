@@ -27,7 +27,7 @@ export function Table(props){
         <table style={tableStyle}>
             <thead style={headerStyle}>
                 <tr>
-                {header.map((i) => <th style={headerCellStyle} key={i}>{i}</th>)}
+                {header.map((i) => <th style={headerCellStyle} key={i + "_header"}>{i}</th>)}
                 </tr>
             </thead>
             <tbody>
