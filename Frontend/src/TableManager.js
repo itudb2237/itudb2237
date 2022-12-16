@@ -39,18 +39,19 @@ export function TableManager(props) {
             }}>Next Page</button>}
             <DropdownMenu name={"Selected Headers"}>
                 {props.allColumns.map((i) =>
-                    <div key={i + "_selection_row"}>
+                    <div key={i["name"] + "_selection_row"}>
                         <input
                             type={"checkbox"}
-                            id={i + "_checkbox"}
-                            key={i + "_checkbox"}
-                            checked={props.requestedColumns.some(a => a == i)}
+                            id={i["name"] + "_checkbox"}
+                            key={i["name"] + "_checkbox"}
+                            checked={props.requestedColumns.some(a => a["name"] == i["name"])}
                             onChange={(event) => props.setRequestedColumns(
                                 event.target.checked ?
-                                    props.allColumns.filter(a => props.requestedColumns.some(b => b == a) || a == i) : props.requestedColumns.filter(a => a != i)
+                                    props.allColumns.filter(a => props.requestedColumns.some(b => b["name"] == a["name"]) || a["name"] == i["name"]) :
+                                    props.requestedColumns.filter(a => a["name"] != i["name"])
                             )}
                         />
-                        <label>{i}</label>
+                        <label>{i["name"]}</label>
                     </div>)}
             </DropdownMenu>
             <div style={{display: "inline"}}>
