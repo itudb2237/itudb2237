@@ -10,33 +10,43 @@ async function fetchAndWrite(setValue, requestUrl) {
 	return resp;
 }
 
-/*export function AddPersonOverlay(props) {
+export function AddPersonOverlay(props) {
 
 	return (
 		<OverlayPage
-			/!*setTrigger={}
-			triggerNewValue={}*!/
+			setTrigger={props.setTrigger}
+			triggerNewValue={false}
 		>
-			<form>
-				<label>Case Number</label>
-				<input type={"number"} id={"caseNumber"} name={"caseNumber"}/>
-				<label>Vehicle Number</label>
-				<input type={"number"} id={"vehicleNumber"} name={"vehicleNumber"}/>
-				<label>Person Number</label>
-				<input type={"number"} id={"personNumber"} name={"personNumber"}/>
-				<label>Age</label>
-				<input type={"number"} id={"age"} name={"age"}/>
-				<label>Sex</label>
-				<input type={}
+			<form style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}>
+				{props.allColumns.map((column) => {
+					return (
+						<div key={column["name"] + "_addperson"}>
+							<label>{column["name"] + ": "}</label>
+							{column["type"] == "INTEGER" ?
+								<input type="number" name={column}/> :
+								(column["possibleValues"] == null ?
+									<input type="text" name={column}/> :
+								 	<select name={column}>
+										{["NULL", ...column["possibleValues"].slice(3)].map((value) => {
+											return <option value={value}>{value}</option>
+										})}
+									 </select>
+								)
+							}
+						</div>
+					)
+				})}
+				<button type="submit">Submit</button>
 			</form>
 		</OverlayPage>
 	);
-}*/
+}
 
 export function People(){
 	// Variable declarations
 	let [page, setPage] = useState(1);
 	let [order, setOrder] = useState("ASC");
+	let [isAddPersonOverlayOpen, setIsAddPersonOverlayOpen] = useState(false);
 	let [columns, setColumns] = useState([{}]);
 	let [entryPerPage, setEntryPerPage] = useState(100);
 	let [orderBy, setOrderBy] = useState("CASE_NUMBER");
@@ -62,6 +72,8 @@ export function People(){
 	return (
 		<>
 			<h1>People Table Page</h1>
+			{isAddPersonOverlayOpen && <AddPersonOverlay setTrigger={setIsAddPersonOverlayOpen} allColumns={columns}/>}
+			<button style={{float: "right"}} onClick={() => setIsAddPersonOverlayOpen(true)}>Add Person</button>
 			<TableManager
 				page={page}
 				pageCount={response.maxPageCount}
