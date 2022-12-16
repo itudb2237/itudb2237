@@ -20,7 +20,7 @@ let headerCellStyle = {
     padding: '0.5em',
     textAlign: 'center',
     resize: "horizontal",
-    overflow: "horizontal"
+    overflow: "auto"
 }
 
 let rowStyle = {
@@ -36,16 +36,26 @@ let cellStyle = {
 }
 
 export function Table(props){
-    let header = props.header;
+    let requestedColumns = props.header;
     let data = props.data;
     return (
         <table style={tableStyle}>
             <thead style={headerStyle}>
                 <tr>
-                {header.map((i) =>
-                    <th style={headerCellStyle} key={i["name"] + "_header"}>
-                        <DropdownMenu visiblePart={i["name"]}>
-                            <p>asd</p>
+                {requestedColumns.map((element, index) =>
+                    <th style={headerCellStyle} key={element["name"] + "_header"}>
+                        <DropdownMenu visiblePart={element["name"]}>
+                            {element["type"] == "CHAR" && element["possibleValues"] == null ?
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    onChange={a => props.setHeader(
+                                        [
+                                            ...requestedColumns.slice(0, index),
+                                            {...requestedColumns[index], "filter": a.target.value.length > 0 ? a.target.value : null},
+                                            ...requestedColumns.slice(index+1)
+                                        ])}/> :
+                                <p>asd</p>}
                         </DropdownMenu>
                     </th>)
                     }

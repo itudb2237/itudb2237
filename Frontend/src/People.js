@@ -52,7 +52,7 @@ export function People(){
 			"filter" + a["name"] + "=" + a["filter"] )).join("&")
 		fetchAndWrite(setResponse, url + "/getPeople?pageNumber=" + page + "&rowPerPage=" + entryPerPage +
 			(requestedColumns.length != 0 ? "&requestedColumns=" + requestedColumns.map(a => a["name"]).join(",") : "")
-			+ "&" + filters);
+			+ (filters.length > 0 ? "&" + filters : ""));
 	} , [page, entryPerPage, requestedColumns])
 	return (
 		<>
@@ -69,6 +69,7 @@ export function People(){
 			/>
 			<Table
 				header={requestedColumns}
+				setHeader={setRequestedColumns}
 				data={response.data}
 			/>
 		</>);
