@@ -30,8 +30,8 @@ def getHeaders():
 
 @app.route('/getPeople', methods=['GET'])
 def getPeople():
-    if not requestchecker(request.remote_addr, db):
-        return "Too many requests", 429
+#    if not requestchecker(request.remote_addr, db):
+#        return "Too many requests", 429
 
     rowperpage = request.args.get('rowPerPage', default=100, type=int)
 
@@ -77,7 +77,7 @@ def getPeople():
 
     count = db.executeSQLQuery(countQuery).fetchone()[0]
 
-    query = f"SELECT {', '.join(requestedcolumns)} FROM PERSON {'WHERE ' + filters if len(filters)>0 else ''} ORDER BY {orderBy} {order} LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}"
+    query = f"SELECT {', '.join(requestedcolumns)} FROM PERSON {'WHERE ' + filters if len(filters)>0 else ''} ORDER BY {orderBy} {order} LIMIT {(pagenumber - 1)*rowperpage}, {rowperpage}"
 
     print(query)
 
@@ -124,8 +124,9 @@ def getPerson(case_number, vehicle_number, person_number):
 
 @app.route('/addPerson', methods=['POST'])
 def addPerson():
-    data = request.get_json()
-    db.executeSQLQuery(f"INSERT INTO PERSON ( CASE_NUMBER, VEHICLE_NUMBER, PERSON_NUMBER, AGE, SEX, PERSON_TYPE, INJURY_SEVERITY, SEATING_POSITION) VALUES ( {data['CASE_NUMBER']}, {data['VEHICLE_NUMBER']}, {data['PERSON_NUMBER']}, {data['AGE']}, {data['SEX']}, {data['PERSON_TYPE']}, {data['INJURY_SEVERITY']}, {data['SEATING_POSITION']})")
+    data = request.form
+    query = f"INSERT INTO PERSON ( CASE_NUMBER, VEHICLE_NUMBER, PERSON_NUMBER, AGE, SEX, PERSON_TYPE, INJURY_SEVERITY, SEATING_POSITION) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+    db.executeSQLQuery(query, (int(data['CASE_NUMBER']), int(data['VEHICLE_NUMBER']), int(data['PERSON_NUMBER']), data['AGE'], data['SEX'], data['PERSON_TYPE'], data['INJURY_SEVERITY'], data['SEATING_POSITION']))
     return "OK"
 
 
