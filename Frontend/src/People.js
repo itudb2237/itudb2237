@@ -17,27 +17,30 @@ export function AddPersonOverlay(props) {
 			setTrigger={props.setTrigger}
 			triggerNewValue={false}
 		>
-			<form style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}} action={url + "/addPerson"} method={"POST"}>
+			<form
+				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
+				action={url + "/addPerson"} method={"POST"}
+			>
 				{props.allColumns.map((column) => {
 					return (
-						<>
-							<label style={{display: "inline"}}>{column["name"] + ": "}</label>
+						<div key={column["name"]+"_input_div"}>
+							<label style={{display: "inline"}} key={column["name"]+"_label"}>{column["name"] + ": "}</label>
 							{column["type"] == "INTEGER" ?
-								<input type="number" name={column["name"]} style={{display: "inline"}}/> :
+								<input type="number" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
 								(column["possibleValues"] == null ?
-									<input type="text" name={column["name"]} style={{display: "inline"}}/> :
-								 	<select name={column["name"]} style={{display: "inline"}}>
+									<input type="text" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
+								 	<select name={column["name"]} style={{display: "inline"}} key={column["name"]+"_select"}>
 										{["NULL", ...column["possibleValues"].slice(3)].map((value) => {
-											return <option value={value}>{value}</option>
+											return <option value={value} key={value+"_option"}>{value}</option>
 										})}
 									 </select>
 								)
 							}
-						</>
+						</div>
 					)
 				})}
 				<input type="submit" value="Submit"/>
-			</form>
+v			</form>
 		</OverlayPage>
 	);
 }
@@ -46,12 +49,13 @@ export function People(){
 	// Variable declarations
 	let [page, setPage] = useState(1);
 	let [order, setOrder] = useState("ASC");
-	let [isAddPersonOverlayOpen, setIsAddPersonOverlayOpen] = useState(false);
+	let [reload, setReload] = useState(false);
 	let [columns, setColumns] = useState([{}]);
 	let [entryPerPage, setEntryPerPage] = useState(100);
 	let [orderBy, setOrderBy] = useState("CASE_NUMBER");
 	let [requestedColumns, setRequestedColumns] = useState([]);
 	let [response, setResponse] = useState({"data": [], maxPageCount:0})
+	let [isAddPersonOverlayOpen, setIsAddPersonOverlayOpen] = useState(false);
 	// Runs once on page load
 	useEffect(() => {
 		fetchAndWrite(setColumns, url + "/getPersonHeader").then((resp) => {
@@ -68,7 +72,7 @@ export function People(){
 		fetchAndWrite(setResponse, url + "/getPeople?pageNumber=" + page + "&rowPerPage=" + entryPerPage +
 			(requestedColumns.length != 0 ? "&requestedColumns=" + requestedColumns.map(a => a["name"]).join(",") : "")
 			+ (filters.length > 0 ? "&" + filters : "") + "&orderBy=" + orderBy + "&order=" + order)
-	} , [page, entryPerPage, requestedColumns, order, orderBy])
+	} , [page, entryPerPage, requestedColumns, order, orderBy, reload])
 	return (
 		<>
 			<h1>People Table Page</h1>
@@ -87,6 +91,8 @@ export function People(){
 				setOrderBy={setOrderBy}
 				order={order}
 				setOrder={setOrder}
+				reload={reload}
+				setReload={setReload}
 			/>
 			<Table
 				header={requestedColumns}

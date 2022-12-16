@@ -127,7 +127,7 @@ def addPerson():
     data = request.form
     query = f"INSERT INTO PERSON ( CASE_NUMBER, VEHICLE_NUMBER, PERSON_NUMBER, AGE, SEX, PERSON_TYPE, INJURY_SEVERITY, SEATING_POSITION) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     db.executeSQLQuery(query, (int(data['CASE_NUMBER']), int(data['VEHICLE_NUMBER']), int(data['PERSON_NUMBER']), data['AGE'], data['SEX'], data['PERSON_TYPE'], data['INJURY_SEVERITY'], data['SEATING_POSITION']))
-    return "OK"
+    return "OK", 204
 
 
 @app.route('/updatePerson', methods=['POST'])

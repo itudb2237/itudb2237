@@ -54,6 +54,7 @@ export function TableManager(props) {
                         <label>{i["name"]}</label>
                     </div>)}
             </DropdownMenu>
+            <button onClick={() => props.setReload(!props.reload)}>Reload</button>
             <div style={{display: "inline"}}>
                 {props.children}
             </div>
