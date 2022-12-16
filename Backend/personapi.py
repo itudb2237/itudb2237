@@ -3,13 +3,24 @@ from __main__ import app, db
 from flask import make_response, request
 import TableConverters.PersonTableConverter as PersonTableConverter
 
-personFieldNames = [{"name": i[1], "type": "CHAR" if i[2].startswith("CHAR") else i[2]}
-                        for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()]
+personColumns = [{"name": i[1], "type": "CHAR" if i[2].startswith("CHAR") else i[2]}
+                 for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()]
 
+for i in personColumns:
+    if i["name"] in ["SEX", "PERSON_TYPE", "INJURY_SEVERITY", "SEATING_POSITION"]:
+        i["possibleValues"] = db.executeSQLQuery(f"SELECT DISTINCT {i['name']} FROM PERSON ORDER BY {i['name']};").fetchall()
+        if i["possibleValues"][0] == (None,):
+            i["possibleValues"][0] = ("NULL",)
+        else:
+            i["possibleValues"].insert(0, ("NULL",))
+        i["possibleValues"].insert(1, ("NOT NULL",))
+        i["possibleValues"].insert(0, ("All Values",))
+
+print(personColumns)
 
 @app.route('/getPersonHeader', methods=['GET'])
 def getHeaders():
-    response = make_response(personFieldNames)
+    response = make_response(personColumns)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
@@ -23,17 +34,48 @@ def getPeople():
 
     pagenumber = request.args.get('pageNumber', default=1, type=int)
 
-    requestedcolumns = request.args.get('requestedColumns', default=",".join(map(lambda x: x["name"], personFieldNames))
+    requestedcolumns = request.args.get('requestedColumns', default=",".join(map(lambda x: x["name"], personColumns))
                                         , type=str).split(",")
 
-    filters = ""
+    filters = []
 
-    count = db.executeSQLQuery("SELECT COUNT(*) FROM Person").fetchone()[0]
+    for i in personColumns:
+        currentFilter = request.args.get('filter'+i["name"], default="", type=str)
+        if currentFilter == "NULL":
+            filters.append(i["name"] + " IS NULL")
+        elif currentFilter == "NOT NULL":
+            filters.append(i["name"] + " IS NOT NULL")
+        elif currentFilter == "All Values":
+            continue
+        elif currentFilter != "":
+            if i["type"] == "CHAR":
+                if "possibleValues" in i:
+                    filters.append(i["name"] + " == \"" + currentFilter + "\"")
+                else:
+                    filters.append(i["name"] + " LIKE \"" + currentFilter + "%\"")
+            elif i["type"] == "INTEGER":
+                rangeOfValue = currentFilter.split(",")
+                if rangeOfValue[0] != "" and rangeOfValue[1] != "":
+                    filters.append(i["name"] + " BETWEEN " + rangeOfValue[0] + " AND " + rangeOfValue[1])
+                elif rangeOfValue[1] != "":
+                    filters.append(i["name"] + " <= " + rangeOfValue[1])
+                else:
+                    filters.append(i["name"] + " >= " + rangeOfValue[1])
+
+    filters = " AND ".join(filters)
+
+    countQuery = f"SELECT COUNT(*) FROM Person {'WHERE ' + filters if len(filters)>0 else ''}"
+
+    print(countQuery)
+
+    count = db.executeSQLQuery(countQuery).fetchone()[0]
+
+    query = f"SELECT {', '.join(requestedcolumns)} FROM PERSON {'WHERE ' + filters if len(filters)>0 else ''} LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}"
+
+    print(query)
 
     results = {
-        "data": db.executeSQLQuery(
-            f"SELECT {', '.join(requestedcolumns)} FROM PERSON {'WHERE ' + filters if len(filters)>0 else ''} LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}"
-        ).fetchall(),
+        "data": db.executeSQLQuery(query).fetchall(),
         "maxPageCount": int((count+rowperpage - 1)/rowperpage)
     }
     response = make_response(results)
