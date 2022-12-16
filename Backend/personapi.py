@@ -1,6 +1,7 @@
 from __main__ import app, db
 
 from flask import make_response, request
+from iprequestchecker import requestchecker
 import TableConverters.PersonTableConverter as PersonTableConverter
 
 personColumns = [{"name": i[1], "type": "CHAR" if i[2].startswith("CHAR") else i[2]}
@@ -29,6 +30,8 @@ def getHeaders():
 
 @app.route('/getPeople', methods=['GET'])
 def getPeople():
+    if not requestchecker(request.remote_addr, db):
+        return "Too many requests", 429
 
     rowperpage = request.args.get('rowPerPage', default=100, type=int)
 
