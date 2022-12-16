@@ -45,28 +45,61 @@ export function Table(props){
                 {requestedColumns.map((element, index) =>
                     <th style={headerCellStyle} key={element["name"] + "_header"}>
                         <DropdownMenu visiblePart={element["name"]}>
-                            {element["type"] == "CHAR" ? (element["possibleValues"] == null ?
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    onChange={a => props.setHeader(
-                                        [
-                                            ...requestedColumns.slice(0, index),
-                                            {...requestedColumns[index], "filter": a.target.value.length > 0 ? a.target.value : null},
-                                            ...requestedColumns.slice(index+1)
-                                        ])}/> :
-                                        <select
+                            {(() => {
+                                if(element["type"] == "CHAR") {
+                                    if(element["possibleValues"] == null) {
+                                        return (<input
+                                            type="text"
+                                            placeholder="Search..."
                                             onChange={a => props.setHeader(
                                                 [
                                                     ...requestedColumns.slice(0, index),
-                                                    {...requestedColumns[index], "filter": a.target.value},
-                                                    ...requestedColumns.slice(index+1)
-                                                ])}>
-                                            {element["possibleValues"].map((i) =>
-                                                <option key={i} value={i}>{i}</option>)}
-                                        </select>
-                                ):
-                                <p>asd</p>}
+                                                    {
+                                                        ...requestedColumns[index],
+                                                        "filter": a.target.value.length > 0 ? a.target.value : null
+                                                    },
+                                                    ...requestedColumns.slice(index + 1)
+                                                ])}/>)
+                                    }else{
+                                        return (
+                                            <select
+                                                onChange={a => props.setHeader(
+                                                    [
+                                                        ...requestedColumns.slice(0, index),
+                                                        {...requestedColumns[index], "filter": a.target.value},
+                                                        ...requestedColumns.slice(index+1)
+                                                    ])}>
+                                                {element["possibleValues"].map((i) =>
+                                                    <option key={i} value={i}>{i}</option>)}
+                                            </select>)
+                                    }
+                                }else if(element["type"] == "INTEGER"){
+                                        return (
+                                        <>
+                                            <input
+                                                type="number"
+                                                placeholder={"Min"}
+                                                onChange={a => props.setHeader(
+                                                    [
+                                                        ...requestedColumns.slice(0, index),
+                                                        {...requestedColumns[index], "filter": a.target.value.length > 0 ? a.target.value : null},
+                                                        ...requestedColumns.slice(index+1)
+                                                    ])}
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder={"Max"}
+                                                onChange={a => props.setHeader(
+                                                    [
+                                                        ...requestedColumns.slice(0, index),
+                                                        {...requestedColumns[index], "filter": a.target.value.length > 0 ? a.target.value : null},
+                                                        ...requestedColumns.slice(index+1)
+                                                    ])}
+                                            />
+                                        </>
+                                    )
+                                }
+                            })()}
                         </DropdownMenu>
                     </th>)
                     }
