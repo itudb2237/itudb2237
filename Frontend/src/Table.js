@@ -1,3 +1,5 @@
+import {DropdownMenu} from "./DropdownMenu";
+
 let tableStyle = {
     width: '100%',
 }
@@ -5,7 +7,9 @@ let tableStyle = {
 let headerStyle = {
     backgroundColor: '#f5f5f5',
     color: '#000',
-    width: '100%'
+    width: '100%',
+    position: 'sticky',
+    top: '0px'
 }
 
 let headerCellStyle = {
@@ -16,8 +20,7 @@ let headerCellStyle = {
     padding: '0.5em',
     textAlign: 'center',
     resize: "horizontal",
-    overflow: "auto",
-    position: "sticky"
+    overflow: "horizontal"
 }
 
 let rowStyle = {
@@ -39,7 +42,13 @@ export function Table(props){
         <table style={tableStyle}>
             <thead style={headerStyle}>
                 <tr>
-                {header.map((i) => <th style={headerCellStyle} key={i["name"] + "_header"}>{i["name"]}</th>)}
+                {header.map((i) =>
+                    <th style={headerCellStyle} key={i["name"] + "_header"}>
+                        <DropdownMenu visiblePart={i["name"]}>
+                            <p>asd</p>
+                        </DropdownMenu>
+                    </th>)
+                    }
                 </tr>
             </thead>
             <tbody>
