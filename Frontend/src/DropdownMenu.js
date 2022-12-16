@@ -8,9 +8,9 @@ export function DropdownMenu(props) {
             onMouseEnter={() => dropdownRef.current.style.display = "block"}
             onMouseLeave={() => dropdownRef.current.style.display = "none"}
         >
-            <button>
+            {props.visiblePart ?? <button>
                 {props.name}
-            </button>
+            </button>}
             <div ref={dropdownRef} style={{position: "absolute", display: "none", zIndex: "1", backgroundColor: '#f5f5f5'}}>
                 {props.children}
             </div>
