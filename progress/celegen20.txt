@@ -11,3 +11,4 @@
 14.12.2022 : If user sends specific column names to backend only those columns are returned (not working properly on the frontend yet)
 16.12.2022 : Fixed the issue with dropdown menu to select headers / Headers are returned from some function once and frontend uses it /
 			 Build react project and moved it into flask project now frontend can run with flask to.
+17.12.2022 : Added filtering for all columns. / Order can be specified now. / Added Page overlay for adding new rows.
