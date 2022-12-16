@@ -48,12 +48,14 @@ export function People(){
 	}, [])
 	// Runs when page, entryPerPage, or requestedColumns changes (i.e. when the table needs to be updated) or when the page is first loaded
 	useEffect(() => {
+		let filters = (requestedColumns.filter(a => a["filter"] != null).map(a =>
+			"filter" + a["name"] + "=" + a["filter"] )).join("&")
 		fetchAndWrite(setResponse, url + "/getPeople?pageNumber=" + page + "&rowPerPage=" + entryPerPage +
-			(requestedColumns.length != 0 ? "&requestedColumns=" + requestedColumns.map(a => a["name"]).join(","): ""))
+			(requestedColumns.length != 0 ? "&requestedColumns=" + requestedColumns.map(a => a["name"]).join(",") : "")
+			+ "&" + filters);
 	} , [page, entryPerPage, requestedColumns])
 	return (
 		<>
-
 			<h1>People Table Page</h1>
 			<TableManager
 				page={page}
