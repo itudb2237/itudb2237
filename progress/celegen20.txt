@@ -5,3 +5,9 @@
 9.12.2022 : Writen a flask function which returns all the rows in my table and the headers (column names). /
  		In frontend, implemented fetching the data from backend and table component to display the data from the flask. /
  		 Limited rows per page to 100. (Curently unfunctional feature but will be implemented in the future)
+10.12.2022 : Limited row per page with custom row count per page from user.
+13.12.2022 : Primary Key of person table is consist of 3 columns, as you give more values as parameter now flask returns
+ 			 the results which has common first, first and second or all three primary key columns according to number of parameters given.
+14.12.2022 : If user sends specific column names to backend only those columns are returned (not working properly on the frontend yet)
+16.12.2022 : Fixed the issue with dropdown menu to select headers / Headers are returned from some function once and frontend uses it /
+			 Build react project and moved it into flask project now frontend can run with flask to.

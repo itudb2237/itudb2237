@@ -1,24 +1,47 @@
 import {Table} from "./Table";
 import {default as url} from "./backendurl";
 import {useEffect, useState} from "react";
-import {PageManager} from "./PageManager";
+import {TableManager} from "./TableManager";
+
+async function fetchAndWrite(setValue, requestUrl) {
+	let resp = await fetch(requestUrl).then((response) => response.json());
+	setValue(resp);
+	return resp;
+}
 
 export function People(){
-    let [response, setResponse] = useState({"data": [], "header": [], maxPageCount:0})
-    let [page, setPage] = useState(1);
-    let [entryPerPage, setEntryPerPage] = useState(100);
+	let [response, setResponse] = useState({"data": [], maxPageCount:0})
+	let [page, setPage] = useState(1);
+	let [entryPerPage, setEntryPerPage] = useState(100);
+	let [columns, setColumns] = useState([{}]);
+	let [requestedColumns, setRequestedColumns] = useState([]);
 
-    useEffect(() => {
-        async function fetchAndWrite() {
-            let response = await fetch(url + "/getPeople?pageNumber=" + page + "&rowPerPage=" + entryPerPage).then((response) => response.json());
-            setResponse(response);
-        }
-        fetchAndWrite();
-    } , [page, entryPerPage])
-    return (
-        <>
-            <h1>People Table Page</h1>
-            <PageManager page={page} pageCount={response.maxPageCount} setPage={setPage} entryPerPage={entryPerPage} setEntryPerPage={setEntryPerPage}/>
-            <Table data={response.data} header={response.header}/>
-        </>);
+	useEffect(() => {
+		fetchAndWrite(setColumns, url + "/getPersonHeader").then((resp) => {
+			setRequestedColumns(resp.map((i) => i.name));
+		})
+	}, [])
+
+	useEffect(() => {
+		fetchAndWrite(setResponse, url + "/getPeople?pageNumber=" + page + "&rowPerPage=" + entryPerPage +
+			(requestedColumns.length != 0 ? "&requestedColumns=" + requestedColumns.join(","): ""))
+	} , [page, entryPerPage, requestedColumns])
+	return (
+		<>
+			<h1>People Table Page</h1>
+			<TableManager
+				page={page}
+				pageCount={response.maxPageCount}
+				setPage={setPage}
+				entryPerPage={entryPerPage}
+				setEntryPerPage={setEntryPerPage}
+				allColumns={columns.map((i) => i.name)}
+				requestedColumns={requestedColumns}
+				setRequestedColumns={setRequestedColumns}
+			/>
+			<Table
+				header={requestedColumns}
+				data={response.data}
+			/>
+		</>);
 }
