@@ -45,7 +45,7 @@ export function Table(props){
                 {requestedColumns.map((element, index) =>
                     <th style={headerCellStyle} key={element["name"] + "_header"}>
                         <DropdownMenu visiblePart={element["name"]}>
-                            {element["type"] == "CHAR" && element["possibleValues"] == null ?
+                            {element["type"] == "CHAR" ? (element["possibleValues"] == null ?
                                 <input
                                     type="text"
                                     placeholder="Search..."
@@ -55,6 +55,17 @@ export function Table(props){
                                             {...requestedColumns[index], "filter": a.target.value.length > 0 ? a.target.value : null},
                                             ...requestedColumns.slice(index+1)
                                         ])}/> :
+                                        <select
+                                            onChange={a => props.setHeader(
+                                                [
+                                                    ...requestedColumns.slice(0, index),
+                                                    {...requestedColumns[index], "filter": a.target.value},
+                                                    ...requestedColumns.slice(index+1)
+                                                ])}>
+                                            {element["possibleValues"].map((i) =>
+                                                <option key={i} value={i}>{i}</option>)}
+                                        </select>
+                                ):
                                 <p>asd</p>}
                         </DropdownMenu>
                     </th>)
