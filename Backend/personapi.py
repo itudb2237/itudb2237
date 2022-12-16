@@ -125,8 +125,9 @@ def getPerson(case_number, vehicle_number, person_number):
 @app.route('/addPerson', methods=['POST'])
 def addPerson():
     data = request.form
-    query = f"INSERT INTO PERSON ( CASE_NUMBER, VEHICLE_NUMBER, PERSON_NUMBER, AGE, SEX, PERSON_TYPE, INJURY_SEVERITY, SEATING_POSITION) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-    db.executeSQLQuery(query, (int(data['CASE_NUMBER']), int(data['VEHICLE_NUMBER']), int(data['PERSON_NUMBER']), data['AGE'], data['SEX'], data['PERSON_TYPE'], data['INJURY_SEVERITY'], data['SEATING_POSITION']))
+    query = f"INSERT INTO PERSON ({', '.join([i['name'] for i in personColumns])}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+    print(tuple([data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]]) for i in personColumns]))
+    db.executeSQLQuery(query, tuple([data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]]) for i in personColumns]))
     return "OK", 204
 
 
