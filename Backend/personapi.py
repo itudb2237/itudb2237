@@ -37,6 +37,10 @@ def getPeople():
     requestedcolumns = request.args.get('requestedColumns', default=",".join(map(lambda x: x["name"], personColumns))
                                         , type=str).split(",")
 
+    orderBy = request.args.get('orderBy', default="CASE_NUMBER", type=str)
+
+    order = request.args.get('order', default="ASC", type=str)
+
     filters = []
 
     for i in personColumns:
@@ -60,7 +64,7 @@ def getPeople():
                 elif rangeOfValue[1] != "":
                     filters.append(i["name"] + " <= " + rangeOfValue[1])
                 else:
-                    filters.append(i["name"] + " >= " + rangeOfValue[1])
+                    filters.append(i["name"] + " >= " + rangeOfValue[0])
 
     filters = " AND ".join(filters)
 
@@ -70,7 +74,7 @@ def getPeople():
 
     count = db.executeSQLQuery(countQuery).fetchone()[0]
 
-    query = f"SELECT {', '.join(requestedcolumns)} FROM PERSON {'WHERE ' + filters if len(filters)>0 else ''} LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}"
+    query = f"SELECT {', '.join(requestedcolumns)} FROM PERSON {'WHERE ' + filters if len(filters)>0 else ''} ORDER BY {orderBy} {order} LIMIT {(pagenumber - 1)*rowperpage + 1}, {rowperpage}"
 
     print(query)
 

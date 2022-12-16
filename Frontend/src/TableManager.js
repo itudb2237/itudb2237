@@ -58,6 +58,26 @@ export function TableManager(props) {
                 {props.children}
             </div>
             <div style={{float: "right"}}>
+                <p style={{display: "inline"}}>Order By: </p>
+                <select
+                    id={"orderBy"}
+                    name={"orderBy"}
+                    defaultValue={props.orderBy}
+                    onChange={(event) => props.setOrderBy(event.target.value)}
+                >
+                    {props.requestedColumns.map((i) =>
+                        <option key={i["name"] + "_order_option"} value={i["name"]}>{i["name"]}</option>
+                    )}
+                </select>
+                <select
+                    id={"orderDirection"}
+                    name={"orderDirection"}
+                    defaultValue={props.order}
+                    onChange={(event) => props.setOrder(event.target.value)}
+                >
+                    <option value={"ASC"}>Ascending</option>
+                    <option value={"DESC"}>Descending</option>
+                </select>
                 <p style={{display: "inline"}}>Entries per Page: </p>
                 <input
                     style={{display: "inline"}}

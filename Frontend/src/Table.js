@@ -82,7 +82,7 @@ export function Table(props){
                                                 onChange={a => props.setHeader(
                                                     [
                                                         ...requestedColumns.slice(0, index),
-                                                        {...requestedColumns[index], "filter": a.target.value.length > 0 ? a.target.value : null},
+                                                        {...requestedColumns[index], "filter": requestedColumns[index]["filter"] == null ? [a.target.value, null] : [a.target.value, requestedColumns[index]["filter"][1]]},
                                                         ...requestedColumns.slice(index+1)
                                                     ])}
                                             />
@@ -92,7 +92,7 @@ export function Table(props){
                                                 onChange={a => props.setHeader(
                                                     [
                                                         ...requestedColumns.slice(0, index),
-                                                        {...requestedColumns[index], "filter": a.target.value.length > 0 ? a.target.value : null},
+                                                        {...requestedColumns[index], "filter": requestedColumns[index]["filter"] == null ? [null, a.target.value] : [requestedColumns[index]["filter"][0], a.target.value]},
                                                         ...requestedColumns.slice(index+1)
                                                     ])}
                                             />
