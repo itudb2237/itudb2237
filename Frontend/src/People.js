@@ -17,26 +17,26 @@ export function AddPersonOverlay(props) {
 			setTrigger={props.setTrigger}
 			triggerNewValue={false}
 		>
-			<form style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}>
+			<form style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}} action={url + "/addPerson"} method={"POST"}>
 				{props.allColumns.map((column) => {
 					return (
-						<div key={column["name"] + "_addperson"}>
-							<label>{column["name"] + ": "}</label>
+						<>
+							<label style={{display: "inline"}}>{column["name"] + ": "}</label>
 							{column["type"] == "INTEGER" ?
-								<input type="number" name={column}/> :
+								<input type="number" name={column["name"]} style={{display: "inline"}}/> :
 								(column["possibleValues"] == null ?
-									<input type="text" name={column}/> :
-								 	<select name={column}>
+									<input type="text" name={column["name"]} style={{display: "inline"}}/> :
+								 	<select name={column["name"]} style={{display: "inline"}}>
 										{["NULL", ...column["possibleValues"].slice(3)].map((value) => {
 											return <option value={value}>{value}</option>
 										})}
 									 </select>
 								)
 							}
-						</div>
+						</>
 					)
 				})}
-				<button type="submit">Submit</button>
+				<input type="submit" value="Submit"/>
 			</form>
 		</OverlayPage>
 	);
