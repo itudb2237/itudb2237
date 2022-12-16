@@ -50,7 +50,7 @@ export function People(){
 	}, [])
 	// Runs when page, entryPerPage, or requestedColumns changes (i.e. when the table needs to be updated) or when the page is first loaded
 	useEffect(() => {
-		let filters = (requestedColumns.filter(a => a["filter"] != null).map(a => {
+		let filters = (requestedColumns.filter(a => a["filter"] != null && (a["type"] != "INTEGER" || a["filter"].every(b => b != ""))).map(a => {
 			if(a["type"] == "INTEGER"){
 				return "filter" + a["name"] + "=" + a["filter"].join(",");
 			}
