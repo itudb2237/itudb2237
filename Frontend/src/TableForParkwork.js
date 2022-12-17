@@ -36,7 +36,7 @@ let cellStyle = {
 }
 
 let dict_of_att = {
-                "PHARM_EV": [
+                "FIRST_HARMFUL_EVENT": [
                      "\"Rollover/Overturn\"",
                      "\"Fire/Explosion\"",
                      "\"Immersion\"",
@@ -102,7 +102,7 @@ let dict_of_att = {
                      "\"Unknown Fixed Object\"",
                      "\"Harmful Event, Details Not Reported\"",
                      "\"Reported as Unknown\""],
-                 "PCARGTYP": [
+                 "CARGO_BODY_TYPE": [
                      "\"Not Applicable\"",
                      "\"Van/Enclosed Box\"",
                      "\"Cargo Tank\"",
@@ -124,7 +124,7 @@ let dict_of_att = {
                      "\"Other\"",
                      "\"Unknown Cargo Body Type\"",
                      "\"Reported as Unknown\""],
-                 "PSP_USE": [
+                 "SPECIAL_USE": [
                      "\"No Special Use\"",
                      "\"Taxi\"",
                      "\"Vehicle Used as School Transport\"",
@@ -146,7 +146,7 @@ let dict_of_att = {
                      "\"Truck Operating With Crash Attenuator Equipment\"",
                      "\"Not Reported\"",
                     "\"Reported as Unknown\"",],
-                 "PVEH_SEV": [
+                 "EXTENT_OF_DAMAGE": [
                     "\"No Damage\"",
                     "\"Minor Damage\"",
                     "\"Functional Damage\"",
@@ -186,16 +186,19 @@ export function TableForParkwork(props){
                         <DropdownMenu name={element["name"]}>
                             {(() => {
                                 if(element["name"] == "FIRST_HARMFUL_EVENT" || element["name"] == "CARGO_BODY_TYPE" || element["name"] == "SPECIAL_USE" || element["name"] == "EXTENT_OF_DAMAGE") {
+                                    return (
                                     <form>
-                                    {Object.keys(dict_of_att).map((key) => {
+                                    {dict_of_att[element["name"]].map((key) => {
+                                        //dict_of_att[element["name"]].map(
+                                        return (
                                         <div>
                                             <label>
                                                 <input type="checkbox" value={dict_of_att[key]} onChange={handleChange} />
                                                 {dict_of_att[key]}
                                             </label>
                                             <br />
-                                        </div>})}
-                                    </form>
+                                        </div>)})}
+                                    </form>)
                                 }else if(element["name"] == "DEATHS"){
                                         return (
                                         <>

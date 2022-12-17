@@ -27,8 +27,8 @@ def getHeadersParkwork():
 
 @app.route('/getParkworks')
 def getParkworks():
-    num_of_row_per_page = flask.request.args.get('num_of_row_per_page', default=100, type=int)
-    page_number = flask.request.args.get('page_number', default=1, type=int)
+    num_of_row_per_page = flask.request.args.get('rowPerPage', default=100, type=int)
+    page_number = flask.request.args.get('pageNumber', default=1, type=int)
 
     count = db.executeSQLQuery("SELECT COUNT(*) FROM PARKWORK").fetchone()[0]
 
