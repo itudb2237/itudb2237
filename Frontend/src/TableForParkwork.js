@@ -35,7 +35,7 @@ let cellStyle = {
     border: '1px solid #000'
 }
 
-dict_of_att = {
+let dict_of_att = {
                 "PHARM_EV": [
                      "\"Rollover/Overturn\"",
                      "\"Fire/Explosion\"",
@@ -158,6 +158,25 @@ dict_of_att = {
 export function TableForParkwork(props){
     let requestedColumns = props.header;
     let data = props.data;
+
+    const handleChange = (event) => {
+        let FilterValues = [];
+    
+        let checkboxes = event.target.form.elements;
+    
+        for (let i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].checked) {
+            FilterValues.push(checkboxes[i].value);
+          }
+        }
+        
+        props.setHeader([
+            ...requestedColumns.slice(0, index),
+            {...requestedColumns[index], "filter": updatedFilterValues},
+            ...requestedColumns.slice(index+1)
+        ]);
+    };
+
     return (
         <table style={tableStyle}>
             <thead style={headerStyle}>
@@ -167,21 +186,16 @@ export function TableForParkwork(props){
                         <DropdownMenu name={element["name"]}>
                             {(() => {
                                 if(element["name"] == "FIRST_HARMFUL_EVENT" || element["name"] == "CARGO_BODY_TYPE" || element["name"] == "SPECIAL_USE" || element["name"] == "EXTENT_OF_DAMAGE") {
+                                    <form>
                                     {Object.keys(dict_of_att).map((key) => {
-                                        <div key={dict_of_att[key] + "_selection_row"}>
-                                            <input
-                                                type={"checkbox"}
-                                                id={dict_of_att[key] + "_checkbox"}
-                                                key={dict_of_att[key] + "_checkbox"}
-                                                checked={props.requestedColumns.some(a => a["name"] == dict_of_att[key])}
-                                                onChange={(event) => props.setRequestedColumns(
-                                                    event.target.checked ?
-                                                        props.allColumns.filter(a => props.requestedColumns.some(b => b["name"] == a["name"]) || a["name"] == dict_of_att[key]) :
-                                                        props.requestedColumns.filter(a => a["name"] != dict_of_att[key])
-                                                )}
-                                            />
-                                            <label>{dict_of_att[key]}</label>
-                                        </div> })}
+                                        <div>
+                                            <label>
+                                                <input type="checkbox" value={dict_of_att[key]} onChange={handleChange} />
+                                                {dict_of_att[key]}
+                                            </label>
+                                            <br />
+                                        </div>})}
+                                    </form>
                                 }else if(element["name"] == "DEATHS"){
                                         return (
                                         <>
