@@ -40,7 +40,73 @@ export function AddPersonOverlay(props) {
 					)
 				})}
 				<input type="submit" value="Submit"/>
-v			</form>
+			</form>
+		</OverlayPage>
+	);
+}
+
+export function UpdatePersonOverlay(props) {
+	let [person, setPerson] = useState([]);
+
+	useEffect(() => {
+		fetchAndWrite(setPerson, url + "/getPerson/" + props.personData[0] + "/" + props.personData[1] + "/" + props.personData[2]);
+	}, [])
+
+	return (
+		<OverlayPage
+			setTrigger={props.setTrigger}
+			triggerNewValue={[]}
+		>
+			<form
+				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
+				action={url + "/updatePerson"} method={"POST"}
+			>
+				{props.allColumns.map((column, index) => {
+					let isDisabled = ["CASE_NUMBER", "VEHICLE_NUMBER", "PERSON_NUMBER"].some((value) => value == column["name"]);
+					return (
+						<div key={column["name"]+"_input_div"}>
+							<label style={{display: "inline"}} key={column["name"]+"_label"}>{column["name"] + ": "}</label>
+							{column["type"] == "INTEGER" ?
+								<input type="number"
+									   name={column["name"]}
+									   style={{display: "inline"}}
+									   key={column["name"]+"_input"}
+									   defaultValue={person[index]}
+									   readOnly={isDisabled}
+								/>
+								:
+								(column["possibleValues"] == null ?
+										<input
+											type="text"
+											name={column["name"]}
+											style={{display: "inline"}}
+											key={column["name"]+"_input"}
+											defaultValue={person[index]}
+											readOnly={isDisabled}
+										/>
+										:
+										<select
+											name={column["name"]}
+											style={{display: "inline"}}
+											key={column["name"]+"_select"}
+											readOnly={isDisabled}
+										>
+											{["NULL", ...column["possibleValues"].slice(3)].map((value) => {
+												return <option value={value} key={value+"_option"} selected={person[index] == value}>{value}</option>
+											})}
+										</select>
+								)
+							}
+						</div>
+					)
+				})}
+				<input type="submit" value="Submit"/>
+			</form>
+			<button onClick={() => {
+				fetch(url + "/deletePerson/" + props.personData[0] + "/" + props.personData[1] + "/" +
+					props.personData[2], {method: "DELETE"});
+			}
+			}>Delete this person</button>
 		</OverlayPage>
 	);
 }
@@ -51,6 +117,9 @@ export function People(){
 	let [order, setOrder] = useState("ASC");
 	let [reload, setReload] = useState(false);
 	let [columns, setColumns] = useState([{}]);
+	let [caseView, setCaseView] = useState([]);
+	let [vehicleView, setVehicleView] = useState([]);
+	let [updatePerson, setUpdatePerson] = useState([]);
 	let [entryPerPage, setEntryPerPage] = useState(100);
 	let [orderBy, setOrderBy] = useState("CASE_NUMBER");
 	let [requestedColumns, setRequestedColumns] = useState([]);
@@ -77,6 +146,7 @@ export function People(){
 		<>
 			<h1>People Table Page</h1>
 			{isAddPersonOverlayOpen && <AddPersonOverlay setTrigger={setIsAddPersonOverlayOpen} allColumns={columns}/>}
+			{updatePerson.length != 0 && <UpdatePersonOverlay setTrigger={setUpdatePerson} allColumns={columns} personData={updatePerson}/>}
 			<button style={{float: "right"}} onClick={() => setIsAddPersonOverlayOpen(true)}>Add Person</button>
 			<TableManager
 				page={page}
@@ -98,6 +168,7 @@ export function People(){
 				header={requestedColumns}
 				setHeader={setRequestedColumns}
 				data={response.data}
+				foreignKeys={{CASE_NUMBER: setCaseView, VEHICLE_NUMBER: setVehicleView, PERSON_NUMBER: setUpdatePerson}}
 			/>
 		</>);
 }

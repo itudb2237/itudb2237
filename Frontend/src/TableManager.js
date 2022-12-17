@@ -60,16 +60,21 @@ export function TableManager(props) {
             </div>
             <div style={{float: "right"}}>
                 <p style={{display: "inline"}}>Order By: </p>
-                <select
-                    id={"orderBy"}
-                    name={"orderBy"}
-                    defaultValue={props.orderBy}
-                    onChange={(event) => props.setOrderBy(event.target.value)}
-                >
+                <DropdownMenu name={props.orderBy}>
                     {props.requestedColumns.map((i) =>
-                        <option key={i["name"] + "_order_option"} value={i["name"]}>{i["name"]}</option>
+                        <>
+                            <input
+                                type={"radio"}
+                                key={i["name"] + "_order_option"}
+                                value={i["name"]}
+                                name={"orderby"}
+                                onChange={(event)  => event.target.checked && props.setOrderBy(event.target.value)}
+                                checked={props.orderBy == i["name"]}
+                            />
+                            <label>{i["name"]}</label><br/>
+                        </>
                     )}
-                </select>
+                </DropdownMenu>
                 <select
                     id={"orderDirection"}
                     name={"orderDirection"}
