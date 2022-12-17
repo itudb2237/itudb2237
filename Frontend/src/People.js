@@ -89,11 +89,10 @@ export function UpdatePersonOverlay(props) {
 											name={column["name"]}
 											style={{display: "inline"}}
 											key={column["name"]+"_select"}
-											defaultValue={person[index]}
 											readOnly={isDisabled}
 										>
 											{["NULL", ...column["possibleValues"].slice(3)].map((value) => {
-												return <option value={value} key={value+"_option"}>{value}</option>
+												return <option value={value} key={value+"_option"} selected={person[index] == value}>{value}</option>
 											})}
 										</select>
 								)
