@@ -142,5 +142,12 @@ def updatePerson():
                        (int(data["AGE"]) if data["AGE"] else None, data["SEX"], data["PERSON_TYPE"], data["INJURY_SEVERITY"], data["SEATING_POSITION"], int(data["CASE_NUMBER"]), int(data["VEHICLE_NUMBER"]), int(data["PERSON_NUMBER"])))
     return "OK", 204
 
+
+@app.route('/deletePerson', methods=['POST'])
+def deletePerson():
+    data = request.get_json()
+    db.executeSQLQuery(f"DELETE FROM PERSON WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ? AND PERSON_NUMBER = ?", (int(data["CASE_NUMBER"]), int(data["VEHICLE_NUMBER"]), int(data["PERSON_NUMBER"])))
+    return "OK", 204
+
 if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PERSON'").fetchall():
     PersonTableConverter.createAndFillPeopleTable(db.db)
