@@ -17,6 +17,7 @@ for i in personColumns:
         i["possibleValues"].insert(1, ("NOT NULL",))
         i["possibleValues"].insert(0, ("All Values",))
 
+
 print(personColumns)
 
 @app.route('/getPersonHeader', methods=['GET'])
@@ -114,8 +115,8 @@ def getPeopleInVehicle(case_number, vehicle_number):
 
 @app.route('/getPerson/<int:case_number>/<int:vehicle_number>/<int:person_number>')
 def getPerson(case_number, vehicle_number, person_number):
-    results = db.executeSQLQuery(f"SELECT * FROM PERSON WHERE CASE_NUMBER = {case_number} AND VEHICLE_NUMBER = {vehicle_number} AND PERSON_NUMBER = {person_number}").fetchall()
-    response = make_response(results)
+    results = db.executeSQLQuery(f"SELECT * FROM PERSON WHERE CASE_NUMBER = {case_number} AND VEHICLE_NUMBER = {vehicle_number} AND PERSON_NUMBER = {person_number}").fetchall()[0]
+    response = make_response(list(results))
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
@@ -126,16 +127,20 @@ def getPerson(case_number, vehicle_number, person_number):
 def addPerson():
     data = request.form
     query = f"INSERT INTO PERSON ({', '.join([i['name'] for i in personColumns])}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-    print(tuple([data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]]) for i in personColumns]))
-    db.executeSQLQuery(query, tuple([data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]]) for i in personColumns]))
+    print(tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in personColumns]))
+    db.executeSQLQuery(query, tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in personColumns]))
     return "OK", 204
 
 
 @app.route('/updatePerson', methods=['POST'])
 def updatePerson():
-    data = request.get_json()
-    db.executeSQLQuery(f"UPDATE PERSON SET CASE_NUMBER = {data['CASE_NUMBER']}, VEHICLE_NUMBER = {data['VEHICLE_NUMBER']}, PERSON_NUMBER = {data['PERSON_NUMBER']}, AGE = {data['AGE']}")
-
+    data = dict(request.form)
+    for i in data.keys():
+        if data[i] == "NULL" or data[i] == "":
+            data[i] = None
+    db.executeSQLQuery(f"UPDATE PERSON SET AGE = ?, SEX = ?, PERSON_TYPE = ?,INJURY_SEVERITY = ?, SEATING_POSITION = ? WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ? AND PERSON_NUMBER = ?",
+                       (int(data["AGE"]) if data["AGE"] else None, data["SEX"], data["PERSON_TYPE"], data["INJURY_SEVERITY"], data["SEATING_POSITION"], int(data["CASE_NUMBER"]), int(data["VEHICLE_NUMBER"]), int(data["PERSON_NUMBER"])))
+    return "OK", 204
 
 if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PERSON'").fetchall():
-    PersonTableConverter.createAndFillPeopleTable(db)
+    PersonTableConverter.createAndFillPeopleTable(db.db)
