@@ -28,6 +28,21 @@ export function PageManager(props) {
                     }
                 }}
                 ref={pageNumberRef}
+                onKeyUp={(event) => {
+                    if (event.keyCode == 13) {
+                        if(event.target.value > props.pageCount){
+                            event.target.value = props.pageCount;
+                            props.setPage(props.pageCount);
+                        }
+                        else if(event.target.value < 1){
+                            event.target.value = 1;
+                            props.setPage(1);
+                        }
+                        else{
+                            props.setPage(Number(event.target.value));
+                        }
+                    }
+                }}
             />
             <p style={{display: "inline"}}>
                 {"/" + props.pageCount}
@@ -47,6 +62,11 @@ export function PageManager(props) {
                     props.setEntryPerPage(Number(event.target.value));
                 }}
                 ref={entryPerPageRef}
+                onKeyUp={(event) => {
+                    if (event.keyCode == 13) {
+                        props.setEntryPerPage(Number(event.target.value))
+                    }
+                }}
             />
         </div>
     );

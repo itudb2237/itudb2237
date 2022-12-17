@@ -7,6 +7,7 @@ if __name__ == "__main__":
 
     db = Database("database.db")
 
+    import login
     import personapi
     import ceventapi
     import parkworkapi

@@ -1,0 +1,74 @@
+    .loginbutton {    --globalSecondaryFont: "Montserrat",sans-serif;
+        --easeOutCubic: cubic-bezier(.33,1,.68,1);
+        --navWidth: 14.5rem;
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,system-ui,Helvetica,Arial,sans-serif;
+        --globalBackground: rgba(0,0,0,.2);
+        --globalBackgroundOpaque: #262421;
+        --globalSecondaryBackground: rgba(0,0,0,.14);
+        --globalTertiaryBackground: rgba(0,0,0,.18);
+        --globalAccentBackground: hsla(0,0%,100%,.14);
+        --globalSecondaryAccentBackground: hsla(0,0%,100%,.05);
+        --globalSiteBackground: #312e2b;
+        --subtleButtonBackground: hsla(0,0%,100%,.16);
+        --globalBorder: hsla(0,0%,100%,.1);
+        --globalGray: hsla(0,0%,100%,.08);
+        --globalGraySoft: hsla(0,0%,100%,.08);
+        --globalColorThemeFull: #fff;
+        --globalColorThemeHigh: hsla(0,0%,100%,.85);
+        --globalColorThemeMid: hsla(0,0%,100%,.72);
+        --globalColorThemeLow: hsla(0,0%,100%,.5);
+        --globalColorThemeLower: hsla(0,0%,100%,.2);
+        --globalColorThemeLink: #52b1dc;
+        --globalColorThemeBlueToWhite: #fff;
+        --globalColorThemeBlueToMid: hsla(0,0%,100%,.72);
+        --globalColorThemeBlueToMidHover: hsla(0,0%,100%,.85);
+        --globalColorThemeBlueToHigh: hsla(0,0%,100%,.85);
+        --globalColorThemeBlueToHighHover: #fff;
+        --globalColorThemeHighToMid: hsla(0,0%,100%,.72);
+        --globalColorThemeFullToMid: hsla(0,0%,100%,.72);
+        --globalColorNeutral50: rgba(0,0,0,.1);
+        --globalColorNeutral100: rgba(0,0,0,.2);
+        --globalColorNeutral200: rgba(0,0,0,.4);
+        --globalOverlayBackground: #26211b;
+        --nodeNumber: hsla(0,0%,100%,.5);
+        --nodeColor: hsla(0,0%,100%,.72);
+        -webkit-font-smoothing: antialiased;
+        box-sizing: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        --secondaryBorderColor: transparent;
+        --iconMargin: .8rem;
+        --disabledOpacity: .9;
+        align-items: center;
+        border: 0;
+        border-radius: var(--borderRadius,.5rem);
+        box-shadow: 0 var(--borderHeight) 0 0 var(--borderColor),0 .7rem .95rem .05rem var(--secondaryBorderColor);
+        display: inline-flex;
+        font-size: var(--fontSize,1.5rem);
+        font-weight: 600;
+        justify-content: center;
+        margin-bottom: var(--borderHeight);
+        max-width: 100%;
+        overflow: hidden;
+        position: relative;
+        text-align: center;
+        --borderColor: #537133;
+        --borderHeight: .1rem;
+        --buttonHeight: 3rem;
+        --buttonPaddings: .4rem 1.8rem;
+        --fontSize: 1.3rem;
+        --iconSize: 2.4rem;
+        height: var(--buttonHeight,5rem);
+        color: #fff;
+        background-color: #97c736;
+        line-height: 1;
+        min-width: 6rem;
+        padding: 0 1.2rem;
+        white-space: normal;
+        word-break: break-word;}
+
+        a:hover {
+            background: #95bb4a;
+          }
+
+          
