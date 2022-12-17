@@ -172,7 +172,7 @@ export function TableForParkwork(props){
         
         props.setHeader([
             ...requestedColumns.slice(0, index),
-            {...requestedColumns[index], "filter": updatedFilterValues},
+            {...requestedColumns[index], "filter": FilterValues},
             ...requestedColumns.slice(index+1)
         ]);
     };
