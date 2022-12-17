@@ -1,4 +1,5 @@
 import csv
+import sqlite3
 
 ValueMappings = {"SEX": {"1": "\"MALE\"",
                              "2": "\"FEMALE\"",
@@ -70,10 +71,14 @@ ValueMappings = {"SEX": {"1": "\"MALE\"",
                      }
                      }
 
-def createAndFillPeopleTable(db):
+def createAndFillPeopleTable(dbpath):
     person = csv.DictReader(open("./TableConverters/person.csv"))
 
-    db.executeSQLQuery(("CREATE TABLE IF NOT EXISTS PERSON (\n"
+    db = sqlite3.connect(dbpath)
+
+    cursor = db.cursor()
+
+    cursor.execute(("CREATE TABLE IF NOT EXISTS PERSON (\n"
                     "    CASE_NUMBER INTEGER NOT NULL,\n"
                     "    VEHICLE_NUMBER INTEGER NOT NULL,\n"
                     "    PERSON_NUMBER INTEGER NOT NULL,\n"
@@ -99,8 +104,10 @@ def createAndFillPeopleTable(db):
             i["AGE"] = "NULL"
         for j, k in ValueMappings.items():
             i[j] = k[i[j]]
-        db.executeSQLQuery(f"""INSERT INTO PERSON (CASE_NUMBER, VEHICLE_NUMBER, PERSON_NUMBER, AGE, SEX, PERSON_TYPE, INJURY_SEVERITY, SEATING_POSITION) VALUES
+        cursor.execute(f"""INSERT INTO PERSON (CASE_NUMBER, VEHICLE_NUMBER, PERSON_NUMBER, AGE, SEX, PERSON_TYPE, INJURY_SEVERITY, SEATING_POSITION) VALUES
          ({i["ST_CASE"]}, {i["VEH_NO"]}, {i["PER_NO"]}, {i["AGE"]}, {i["SEX"]}, {i["PER_TYP"]}, {i["INJ_SEV"]}, {i["SEAT_POS"]})""")
 
     db.commit()
+
+    db.close()
 
