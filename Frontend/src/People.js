@@ -102,6 +102,11 @@ export function UpdatePersonOverlay(props) {
 				})}
 				<input type="submit" value="Submit"/>
 			</form>
+			<button onClick={() => {
+				fetch(url + "/deletePerson/" + props.personData[0] + "/" + props.personData[1] + "/" +
+					props.personData[2], {method: "DELETE"});
+			}
+			}>Delete this person</button>
 		</OverlayPage>
 	);
 }
