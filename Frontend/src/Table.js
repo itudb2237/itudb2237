@@ -46,7 +46,7 @@ export function Table(props){
                     <th style={headerCellStyle} key={element["name"] + "_header"}>
                         <DropdownMenu visiblePart={element["name"]}>
                             {(() => {
-                                if(element["type"] == "CHAR") {
+                                if(element["type"] == "VARCHAR" || element["type"] == "CHAR") {
                                     if(element["possibleValues"] == null) {
                                         return (<input
                                             type="text"

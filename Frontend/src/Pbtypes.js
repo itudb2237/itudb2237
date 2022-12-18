@@ -1,7 +1,7 @@
 import {Table} from "./Table";
 import {default as url} from "./backendurl";
 import {useEffect, useState} from "react";
-import {PageManager} from "./PageManager";
+import {PageManager} from "./TableManager";
 
 export function Pbtypes(){
     let [response, setResponse] = useState({"data": [], "header": [], maxPageCount:0})
@@ -18,7 +18,7 @@ export function Pbtypes(){
     return (
         <>
             <h1>Pbtypes Table Page</h1>
-            <PageManager page={page} pageCount={response.maxPageCount} setPage={setPage} entryPerPage={entryPerPage} setEntryPerPage={setEntryPerPage}/>
+            <TableManager page={page} pageCount={response.maxPageCount} setPage={setPage} entryPerPage={entryPerPage} setEntryPerPage={setEntryPerPage}/>
             <Table data={response.data} header={response.header}/>
         </>);
 }
