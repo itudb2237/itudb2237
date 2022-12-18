@@ -120,10 +120,7 @@ def getParkworks():
             additional_statement += f"(DEATHS > {min_max_DEATHS[0] - 1} AND DEATHS < {min_max_DEATHS[1] + 1})"
         additional_statement += ")"
 
-    additional_statement += f" ORDER BY {orderBy}"
-    with open('deneme.txt', 'w') as f:
-        f.write(additional_statement)
-            
+    additional_statement += f" ORDER BY {orderBy}"            
 
     results = {
         "data": db.executeSQLQuery(statement + additional_statement +  f" LIMIT {(page_number - 1) * num_of_row_per_page + 1}, {num_of_row_per_page}").fetchall(),
