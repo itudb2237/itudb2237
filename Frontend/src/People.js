@@ -168,7 +168,7 @@ export function People(){
 				header={requestedColumns}
 				setHeader={setRequestedColumns}
 				data={response.data}
-				foreignKeys={{CASE_NUMBER: setCaseView, VEHICLE_NUMBER: setVehicleView, PERSON_NUMBER: setUpdatePerson}}
+				foreignKeys={{CASE_NUMBER: (row) => setCaseView(row), VEHICLE_NUMBER: (row) => setVehicleView(row), PERSON_NUMBER: (row) => setUpdatePerson(row)}}
 			/>
 		</>);
 }
