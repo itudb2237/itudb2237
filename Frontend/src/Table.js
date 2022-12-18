@@ -13,7 +13,7 @@ let headerStyle = {
 }
 
 let headerCellStyle = {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#999999',
     color: '#000',
     fontWeight: 'bold',
     fontSize: '1.2em',
@@ -24,7 +24,7 @@ let headerCellStyle = {
 }
 
 let rowStyle = {
-    backgroundColor: '#814',
+    backgroundColor: '#E0E0E0',
     color: '#000',
     width: '100%',
     border: '1px solid #000'
