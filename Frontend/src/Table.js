@@ -113,7 +113,7 @@ export function Table(props){
                             return (
                             <td key={String(i) + "." + i2} style={cellStyle}>
                                 <button
-                                    onClick={() => props.foreignKeys[requestedColumns[i2]["name"]](v.slice(0, i2+1))}
+                                    onClick={() => props.foreignKeys[requestedColumns[i2]["name"]](v)}
                                     style={{backgroundColor: 'transparent', border: 'none', color: '#000', padding: '0', cursor: 'pointer'}}
                                 >
                                     {j}
