@@ -19,7 +19,7 @@ class CSVtoDb:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
 
-            query = """INSERT INTO ACCIDENT (STATE, CASE_NUMBER, N_Persons_IN_VEHICLES, YEAR, USED_LAND, LATITUDE, LONGITUDE) VALUES(?,?,?,?,?,?,?)"""
+            query = """INSERT INTO ACCIDENT (STATE, CASE_NUMBER, N_PEOPLE_IN_VEHICLES, YEAR, USED_LAND, LATITUDE, LONGITUDE) VALUES(?,?,?,?,?,?,?)"""
             values = (self.accessMap("STATE", data), int(data["ST_CASE"]), int(data["PERMVIT"]), int(data["YEAR"]), self.accessMap("RUR_URB", data), self.getGeoData(data["LATITUDE"]), self.getGeoData(data["LONGITUD"]))
             cursor.execute(query, values)
             connection.commit()
@@ -44,7 +44,7 @@ def createAndFillAccidentTable():
     create_table = """CREATE TABLE ACCIDENT(
     STATE CHAR(70) NULL,
     CASE_NUMBER INTEGER NOT NULL,
-    N_Persons_IN_VEHICLES INTEGER NULL,
+    N_PEOPLE_IN_VEHICLES INTEGER NULL,
     YEAR INTEGER NULL,
     USED_LAND CHAR(70) NULL,
     LATITUDE INTEGER NULL,
@@ -60,7 +60,7 @@ def createAndFillAccidentTable():
     cursor.execute(create_table)
 
     # csv file content to pandas data frame
-    df = pd.read_csv(".\\accident.csv")
+    df = pd.read_csv("./TableConverters/accident.csv")
     content = df[['STATE', 'ST_CASE', 'PERMVIT', 'YEAR', 'RUR_URB', 'LATITUDE', 'LONGITUD']]
     attribute_number = len(content.columns)
     tuple_number = len(content) 
