@@ -98,8 +98,8 @@ def getAccidents():
 
 @app.route('/getAccident/<int:case_number>')
 def getAccidentsInCase(case_number):
-    results = db.executeSQLQuery(f"SELECT * FROM ACCIDENT WHERE CASE_NUMBER = {case_number}").fetchall()
-    response = make_response(results)
+    results = db.executeSQLQuery(f"SELECT * FROM ACCIDENT WHERE CASE_NUMBER = {case_number}").fetchall()[0]
+    response = make_response(list(results))
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'

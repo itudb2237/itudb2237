@@ -49,7 +49,7 @@ export function UpdateAccidentOverlay(props) {
     let [accident, setAccident] = useState([]);
 
     useEffect(() => {
-        fetchAndWrite(setAccident, url + "/getAccident/" + props.personData[0]);
+        fetchAndWrite(setAccident, url + "/getAccident/" + props.caseData[props.allColumns.map(a => a["name"]).findIndex((a) => a == "CASE_NUMBER")]);
     }, [])
 
     return (
@@ -103,7 +103,7 @@ export function UpdateAccidentOverlay(props) {
                 <input type="submit" value="Submit"/>
             </form>
             <button style={{position: "absolute", bottom: "0px", width: "100%"}} onClick={() => {
-                fetch(url + "/deleteAccident/" + props.personData[0], {method: "POST"});
+                fetch(url + "/deleteAccident/" + props.caseData[0], {method: "POST"});
             }
             }>Delete this accident</button>
         </OverlayPage>
@@ -143,7 +143,7 @@ export function Accidents(){
         <>
             <h1>Accident Table Page</h1>
             {isAddCaseOverlayOpen && <AddAccidentOverlay setTrigger={setIsAddCaseOverlayOpen} allColumns={columns}/>}
-            {updateCase.length != 0 && <UpdateAccidentOverlay setTrigger={setUpdateCase} allColumns={columns} personData={updateCase}/>}
+            {updateCase.length != 0 && <UpdateAccidentOverlay setTrigger={setUpdateCase} allColumns={columns} caseData={updateCase}/>}
             <button style={{float: "right"}} onClick={() => setIsAddCaseOverlayOpen(true)}>Add Accident</button>
             <TableManager
                 page={page}
@@ -165,7 +165,7 @@ export function Accidents(){
                 header={requestedColumns}
                 setHeader={setRequestedColumns}
                 data={response.data}
-                foreignKeys={[]}
+                foreignKeys={{CASE_NUMBER: setUpdateCase}}
             />
         </>);
 }
