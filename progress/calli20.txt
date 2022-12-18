@@ -1,0 +1,3 @@
+17.11.2022: Csv to SQL conversion for table Cevent is implemented.
+7.12.2022: Insert, Update and Get queries for table Cevent is implemented.
+18.12.2022:Both backend and frontend for table Cevent is implemented. Also backend for Accident Table is done. 
