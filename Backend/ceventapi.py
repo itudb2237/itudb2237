@@ -4,6 +4,9 @@ from flask import make_response, request
 from iprequestchecker import requestchecker
 import TableConverters.CeventTableConverter as CeventTableConverter
 
+if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='CEVENT'").fetchall():
+    CeventTableConverter.createAndFillCeventTable(db.db)
+
 ceventColumns = [{"name": i[1], "type": "VARCHAR" if i[2].startswith("VARCHAR") else i[2]}   # use starts with to eliminate difference between VARCHAR(x) and VARCHAR(y)
                  for i in db.executeSQLQuery("PRAGMA table_info(CEVENT)").fetchall()]
 
@@ -143,6 +146,3 @@ def deleteCevent(case_number, event_number):
     db.executeSQLQuery(f"DELETE FROM CEVENT WHERE CASE_NUMBER = ? AND EVENT_NUMBER = ?", (case_number, event_number))
     return "OK", 204
 
-
-#if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='CEVENT'").fetchall():
-CeventTableConverter.createAndFillCeventTable(db.db)
