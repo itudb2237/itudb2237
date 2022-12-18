@@ -100,10 +100,10 @@ export function UpdateCeventOverlay(props) {
 						</div>
 					)
 				})}
-				<input type="submit" value="Submit"/>
+				<input type="submit" value="Submit" style={{position: "absolute", bottom: "50px", width: "100%"}}/>
 			</form>
-			<button onClick={() => {
-				fetch(url + "/deleteCevent/" + props.ceventData[0] + "/" + props.ceventData[1], {method: "DELETE"});
+			<button style={{position: "absolute", bottom: "0px", width: "100%"}} onClick={() => {
+				fetch(url + "/deleteCevent/" + props.ceventData[0] + "/" + props.ceventData[1], {method: "POST"});
 			}
 			}>Delete this cevent</button>
 		</OverlayPage>
