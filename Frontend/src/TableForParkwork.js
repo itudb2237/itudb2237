@@ -35,7 +35,7 @@ let cellStyle = {
     border: '1px solid #000'
 }
 
-let dict_of_att = {
+export let dict_of_att = {
                 "FIRST_HARMFUL_EVENT": [
                      "Rollover/Overturn",
                      "Fire/Explosion",
@@ -249,7 +249,7 @@ export function TableForParkwork(props){
                 {data.map((v, i) => <tr key={i} style={rowStyle}>
                     {v.map((j, i2) =>{
                         console.log(requestedColumns)
-                        if(i2 < requestedColumns.length && requestedColumns[i2]["name"] in props.foreignKeys){
+                        if(i2 < requestedColumns.length && requestedColumns[i2]["name"] in (props.foreignKeys ?? [])){
                             return (
                             <td key={String(i) + "." + i2} style={cellStyle}>
                                 <button

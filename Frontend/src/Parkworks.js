@@ -1,7 +1,8 @@
-import {TableForParkwork} from "./TableForParkwork";
+import {TableForParkwork, dict_of_att} from "./TableForParkwork";
 import {default as url} from "./backendurl";
 import {useEffect, useState} from "react";
 import {TableManager} from "./TableManager";
+import { OverlayPage } from "./OverlayPage";
 
 async function fetchAndWrite(setValue, requestUrl) {
 	let resp = await fetch(requestUrl).then((response) => response.json());
@@ -25,10 +26,10 @@ export function AddParkworkOverlay(props) {
 							<label style={{display: "inline"}} key={column["name"]+"_label"}>{column["name"] + ": "}</label>
 							{column["type"] == "INTEGER" ?
 								<input type="number" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
-								(column["possibleValues"] == null ?
+								(column["name"] in Object.keys(dict_of_att) ?
 									<input type="text" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
 								 	<select name={column["name"]} style={{display: "inline"}} key={column["name"]+"_select"}>
-										{["NULL", ...column["possibleValues"]].map((value) => {
+										{["NULL", ...dict_of_att[column["name"]]].map((value) => {
 											return <option value={value} key={value+"_option"}>{value}</option>
 										})}
 									 </select>
@@ -53,6 +54,7 @@ export function Parkworks(){
 	let [response, setResponse] = useState({"data": [], maxPageCount:0})
 	let [entryPerPage, setEntryPerPage] = useState(100);
 	let [isAddParkworkOverlayOpen, setIsAddParkworkOverlayOpen] = useState(false);
+	let [reload, setReload] = useState(false);
 
 	useEffect(() => {
 		fetchAndWrite(setColumns, url + "/getParkworkHeader").then((resp) => {
@@ -89,6 +91,8 @@ export function Parkworks(){
 				setOrderBy={setOrderBy}
 				order={order}
 				setOrder={setOrder}
+				reload={reload}
+				setReload={setReload}
 			/>
 			<TableForParkwork
 				header={requestedColumns}

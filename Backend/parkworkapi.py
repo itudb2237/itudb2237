@@ -123,7 +123,7 @@ def getParkworks():
     additional_statement += f" ORDER BY {orderBy}"            
 
     results = {
-        "data": db.executeSQLQuery(statement + additional_statement +  f" LIMIT {(page_number - 1) * num_of_row_per_page + 1}, {num_of_row_per_page}").fetchall(),
+        "data": db.executeSQLQuery(statement + additional_statement +  f" LIMIT {(page_number - 1) * num_of_row_per_page}, {num_of_row_per_page}").fetchall(),
         "header": [i[1] for i in db.executeSQLQuery("PRAGMA table_info(PARKWORK)").fetchall()],
         "maxPageCount": int((count + num_of_row_per_page - 1) / num_of_row_per_page)
     }
@@ -153,7 +153,7 @@ def addParkwork():
     db.executeSQLQuery(query, tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in parkwork_attributes]))
     return "OK", 204
 
-    
+
 
 if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PARKWORK'").fetchall():
     parkworkTableConverter.createFillTableParkwork(db)
