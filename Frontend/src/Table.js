@@ -13,7 +13,7 @@ let headerStyle = {
 }
 
 let headerCellStyle = {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#999999',
     color: '#000',
     fontWeight: 'bold',
     fontSize: '1.2em',
@@ -24,7 +24,7 @@ let headerCellStyle = {
 }
 
 let rowStyle = {
-    backgroundColor: '#814',
+    backgroundColor: '#E0E0E0',
     color: '#000',
     width: '100%',
     border: '1px solid #000'
@@ -46,7 +46,7 @@ export function Table(props){
                     <th style={headerCellStyle} key={element["name"] + "_header"}>
                         <DropdownMenu visiblePart={element["name"]}>
                             {(() => {
-                                if(element["type"] == "CHAR") {
+                                if(element["type"] == "VARCHAR" || element["type"] == "CHAR") {
                                     if(element["possibleValues"] == null) {
                                         return (<input
                                             type="text"
@@ -113,7 +113,7 @@ export function Table(props){
                             return (
                             <td key={String(i) + "." + i2} style={cellStyle}>
                                 <button
-                                    onClick={() => props.foreignKeys[requestedColumns[i2]["name"]](v.slice(0, i2+1))}
+                                    onClick={() => props.foreignKeys[requestedColumns[i2]["name"]](v)}
                                     style={{backgroundColor: 'transparent', border: 'none', color: '#000', padding: '0', cursor: 'pointer'}}
                                 >
                                     {j}

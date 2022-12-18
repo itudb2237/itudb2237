@@ -1,5 +1,5 @@
 let headerStyle = {
-    backgroundColor: "#00adee",
+    backgroundColor: "#302F2A",
     color: "white",
     padding: "10px",
     display: "flex",
@@ -7,9 +7,9 @@ let headerStyle = {
 }
 
 let buttonStyle = {
-    backgroundColor: "black",
+    backgroundColor: "#1D1C1A",
     color: "inherit",
-    padding: "5px",
+    padding: "10px",
     borderRadius: "5px",
     border: "none",
     textDecoration: "none"
