@@ -58,7 +58,7 @@ export function UpdatePbtypeOverlay(props) {
 			triggerNewValue={[]}
 		>
 			<form
-				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
+				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "80%"}}
 				action={url + "/updatePbtype"} method={"POST"}
 			>
 				{props.allColumns.map((column, index) => {

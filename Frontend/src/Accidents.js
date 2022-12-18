@@ -135,7 +135,7 @@ export function Accidents(){
                 return "filter" + a["name"] + "=" + a["filter"].join(",");
             }
             return "filter" + a["name"] + "=" + a["filter"] })).join("&")
-        fetchAndWrite(setResponse, url + "/getAccident?pageNumber=" + page + "&rowPerPage=" + entryPerPage +
+        fetchAndWrite(setResponse, url + "/getAccidents?pageNumber=" + page + "&rowPerPage=" + entryPerPage +
             (requestedColumns.length != 0 ? "&requestedColumns=" + requestedColumns.map(a => a["name"]).join(",") : "")
             + (filters.length > 0 ? "&" + filters : "") + "&orderBy=" + orderBy + "&order=" + order)
     } , [page, entryPerPage, requestedColumns, order, orderBy, reload])
@@ -144,7 +144,7 @@ export function Accidents(){
             <h1>Accident Table Page</h1>
             {isAddCaseOverlayOpen && <AddAccidentOverlay setTrigger={setIsAddCaseOverlayOpen} allColumns={columns}/>}
             {updateCase.length != 0 && <UpdateAccidentOverlay setTrigger={setUpdateCase} allColumns={columns} personData={updateCase}/>}
-            <button style={{float: "right"}} onClick={() => setIsAddCaseOverlayOpen(true)}>Add Person</button>
+            <button style={{float: "right"}} onClick={() => setIsAddCaseOverlayOpen(true)}>Add Accident</button>
             <TableManager
                 page={page}
                 pageCount={response.maxPageCount}
@@ -165,6 +165,7 @@ export function Accidents(){
                 header={requestedColumns}
                 setHeader={setRequestedColumns}
                 data={response.data}
+                foreignKeys={[]}
             />
         </>);
 }

@@ -4,6 +4,9 @@ from flask import make_response, request
 from iprequestchecker import requestchecker
 import TableConverters.AccidentTableConverter as AccidentTableConverter
 
+if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='ACCIDENT'").fetchall():
+    AccidentTableConverter.createAndFillAccidentTable()
+
 accidentColumns = [{"name": i[1], "type": "CHAR" if i[2].startswith("CHAR") else i[2]}
                  for i in db.executeSQLQuery("PRAGMA table_info(ACCIDENT)").fetchall()]
 
@@ -128,6 +131,3 @@ def deleteAccident(case_number, vehicle_number, accident_number):
     db.executeSQLQuery(f"DELETE FROM ACCIDENT WHERE CASE_NUMBER = ?", (case_number))
     return "OK", 204
 
-
-# if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='ACCIDENT'").fetchall():
-AccidentTableConverter.createAndFillAccidentTable()
