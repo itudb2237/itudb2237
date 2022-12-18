@@ -104,7 +104,7 @@ export function UpdatePersonOverlay(props) {
 			</form>
 			<button style={{position: "absolute", bottom: "0px", width: "100%"}} onClick={() => {
 				fetch(url + "/deletePerson/" + props.personData[0] + "/" + props.personData[1] + "/" +
-					props.personData[2], {method: "DELETE"});
+					props.personData[2], {method: "POST"});
 			}
 			}>Delete this person</button>
 		</OverlayPage>
