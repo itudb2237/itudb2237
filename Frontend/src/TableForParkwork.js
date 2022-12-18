@@ -193,7 +193,7 @@ export function TableForParkwork(props){
                                         return (
                                         <div>
                                             <label>
-                                                <input type="checkbox" value={key} onChange={handleChange} />
+                                                <input type="checkbox" value={key} onChange={handleChange} checked/>
                                                 {key}
                                             </label>
                                             <br />
