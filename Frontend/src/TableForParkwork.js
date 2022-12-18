@@ -72,8 +72,8 @@ let dict_of_att = {
                      "Curb",
                      "Ditch",
                      "Embankment",
-                     "Embankment – Rock, Stone, or Concrete",
-                     "Embankment – Material Type Unknown",
+                     "Embankment--Rock, Stone, or Concrete",
+                     "Embankment--Material Type Unknown",
                      "Fence",
                      "Wall",
                      "Fire Hydrant",
@@ -134,9 +134,9 @@ let dict_of_att = {
                      "Ambulance",
                      "Fire Truck",
                      "Non-Transport Emergency Services Vehicle",
-                     "Safety Service Patrols – Incident Response",
+                     "Safety Service Patrols--Incident Response",
                      "Other Incident Response ",
-                     "Towing – Incident Response",
+                     "Towing--Incident Response",
                      "Incident Response",
                      "Motor Vehicle Used for Vehicle Sharing Mobility",
                      "Motor Vehicle Used for Electronic Ride-Hailing",
@@ -159,7 +159,7 @@ export function TableForParkwork(props){
     let requestedColumns = props.header;
     let data = props.data;
 
-    const handleChange = (event) => {
+    let handleChange = (event, index) => {
         let FilterValues = [];
     
         let checkboxes = event.target.form.elements;
@@ -167,6 +167,7 @@ export function TableForParkwork(props){
         for (let i = 0; i < checkboxes.length; i++) {
           if (checkboxes[i].checked) {
             FilterValues.push(checkboxes[i].value);
+            console.log(checkboxes[i].value)
           }
         }
         
@@ -189,15 +190,13 @@ export function TableForParkwork(props){
                                     return (
                                     <form>
                                     {dict_of_att[element["name"]].map((key) => {
-                                        //dict_of_att[element["name"]].map(
                                         return (
-                                        <div>
-                                            <label>
-                                                <input type="checkbox" value={key} onChange={handleChange} checked/>
+                                            <label key={key}>
+                                                <input type="checkbox" value={key} onChange={event => handleChange(event,index)} defaultChecked/>
                                                 {key}
+                                                <br />
                                             </label>
-                                            <br />
-                                        </div>)})}
+                                        )})}
                                     </form>)
                                 }else if(element["name"] == "DEATHS"){
                                         return (
