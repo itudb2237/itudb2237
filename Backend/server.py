@@ -14,7 +14,7 @@ if __name__ == "__main__":
     )"""
     db.executeSQLQuery(statement)
 
-    import personapi, pbtypeapi, parkworkapi
+    import personapi, pbtypeapi, parkworkapi, ceventapi
 
 
     @app.route("/", defaults={'path': ''})
