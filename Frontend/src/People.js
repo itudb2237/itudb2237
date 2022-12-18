@@ -58,7 +58,7 @@ export function UpdatePersonOverlay(props) {
 			triggerNewValue={[]}
 		>
 			<form
-				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
+				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "80%"}}
 				action={url + "/updatePerson"} method={"POST"}
 			>
 				{props.allColumns.map((column, index) => {
@@ -102,7 +102,7 @@ export function UpdatePersonOverlay(props) {
 				})}
 				<input type="submit" value="Submit"/>
 			</form>
-			<button onClick={() => {
+			<button style={{position: "absolute", bottom: "0px", width: "100%"}} onClick={() => {
 				fetch(url + "/deletePerson/" + props.personData[0] + "/" + props.personData[1] + "/" +
 					props.personData[2], {method: "DELETE"});
 			}
