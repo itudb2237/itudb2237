@@ -9,6 +9,40 @@ async function fetchAndWrite(setValue, requestUrl) {
 	return resp;
 }
 
+export function AddParkworkOverlay(props) {
+	return (
+		<OverlayPage
+			setTrigger={props.setTrigger}
+			triggerNewValue={false}
+		>
+			<form
+				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
+				action={url + "/addParkwork"} method={"POST"}
+			>
+				{props.allColumns.map((column) => {
+					return (
+						<div key={column["name"]+"_input_div"}>
+							<label style={{display: "inline"}} key={column["name"]+"_label"}>{column["name"] + ": "}</label>
+							{column["type"] == "INTEGER" ?
+								<input type="number" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
+								(column["possibleValues"] == null ?
+									<input type="text" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
+								 	<select name={column["name"]} style={{display: "inline"}} key={column["name"]+"_select"}>
+										{["NULL", ...column["possibleValues"]].map((value) => {
+											return <option value={value} key={value+"_option"}>{value}</option>
+										})}
+									 </select>
+								)
+							}
+						</div>
+					)
+				})}
+				<input type="submit" value="Submit"/>
+			</form>
+		</OverlayPage>
+	);
+}
+
 export function Parkworks(){
 	// Variable declarations
 	let [page, setPage] = useState(1);
@@ -18,6 +52,7 @@ export function Parkworks(){
 	let [columns, setColumns] = useState([{}]);
 	let [response, setResponse] = useState({"data": [], maxPageCount:0})
 	let [entryPerPage, setEntryPerPage] = useState(100);
+	let [isAddParkworkOverlayOpen, setIsAddParkworkOverlayOpen] = useState(false);
 
 	useEffect(() => {
 		fetchAndWrite(setColumns, url + "/getParkworkHeader").then((resp) => {
@@ -39,6 +74,8 @@ export function Parkworks(){
     return (
 		<>
 			<h1>Parkwork Table Page</h1>
+			{isAddParkworkOverlayOpen && <AddParkworkOverlay setTrigger={setIsAddParkworkOverlayOpen} allColumns={columns}/>}
+			<button style={{float: "right"}} onClick={() => setIsAddParkworkOverlayOpen(true)}>Add Parkwork</button>
 			<TableManager
 				page={page}
 				pageCount={response.maxPageCount}

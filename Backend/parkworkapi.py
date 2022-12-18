@@ -134,5 +134,26 @@ def getParkworks():
     resp.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return resp
 
+
+
+@app.route('/getParkwork/<int:case_number>/<int:vehicle_number>')
+def getParkwork(case_number, vehicle_number):
+    results = db.executeSQLQuery(f"SELECT * FROM PARKWORK WHERE CASE_NUMBER = {case_number} AND VEHICLE_NUMBER = {vehicle_number}").fetchall()[0]
+    response = flask.make_response(list(results))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
+@app.route('/addParkwork', methods=['POST'])
+def addParkwork():
+    data = flask.request.form
+    query = f"INSERT INTO PARKWORK ({', '.join([i['name'] for i in parkwork_attributes])}) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    print(tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in parkwork_attributes]))
+    db.executeSQLQuery(query, tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in parkwork_attributes]))
+    return "OK", 204
+
+    
+
 if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PARKWORK'").fetchall():
     parkworkTableConverter.createFillTableParkwork(db)

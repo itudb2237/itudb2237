@@ -246,7 +246,25 @@ export function TableForParkwork(props){
                 </tr>
             </thead>
             <tbody>
-                {data.map((v, i) => <tr key={i} style={rowStyle}>{v.map((j, i2) => <td key={String(i) + "." + i2} style={cellStyle}>{j}</td>)}</tr>)}
+                {data.map((v, i) => <tr key={i} style={rowStyle}>
+                    {v.map((j, i2) =>{
+                        console.log(requestedColumns)
+                        if(i2 < requestedColumns.length && requestedColumns[i2]["name"] in props.foreignKeys){
+                            return (
+                            <td key={String(i) + "." + i2} style={cellStyle}>
+                                <button
+                                    onClick={() => props.foreignKeys[requestedColumns[i2]["name"]](v)}
+                                    style={{backgroundColor: 'transparent', border: 'none', color: '#000', padding: '0', cursor: 'pointer'}}
+                                >
+                                    {j}
+                                </button>
+                            </td>
+                            )
+                        }
+                        return <td key={String(i) + "." + i2} style={cellStyle}>{j}</td>
+                    }
+                    )}
+                </tr>)}
             </tbody>
         </table>);
 }
