@@ -109,16 +109,6 @@ def getCeventsInCase(case_number):
 
 
 @app.route('/getCevent/<int:case_number>/<int:event_number>')
-def getCeventsInEvent(case_number, event_number):
-    results = db.executeSQLQuery(f"SELECT * FROM CEVENT WHERE CASE_NUMBER = {case_number} AND EVENT_NUMBER = {event_number}").fetchall()
-    response = make_response(results)
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-    return response
-
-
-@app.route('/getCevent/<int:case_number>/<int:event_number>')
 def getCevent(case_number, event_number):
     results = db.executeSQLQuery(f"SELECT * FROM CEVENT WHERE CASE_NUMBER = {case_number} AND EVENT_NUMBER = {event_number}").fetchall()[0]
     response = make_response(list(results))
