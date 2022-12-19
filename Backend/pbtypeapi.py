@@ -26,6 +26,9 @@ print(pbtypeColumns)
 
 @app.route('/getPbtypeHeader', methods=['GET'])
 def getPbtypeHeaders():
+    if not requestchecker(request.remote_addr, db):
+        return "Too many requests", 429
+        
     response = make_response(pbtypeColumns)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET'
