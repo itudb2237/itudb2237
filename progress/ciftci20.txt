@@ -1,0 +1,8 @@
+15.11.2022: CSV to SQL conversion of pbtable.
+04.12.2022: SQL to HTML converstion of pbtable.
+12.12.2022: SQL type regulations, type mappings, regulation in table presentation
+14.12.2022: SQL Select queries for backend, updated insert query for increase security
+14.12.2022: Did reasearch on preventing SQL injection on our database
+17.12.2022: Pbtype table fronted is updated
+18.12.2022: Accident Table CSV to SQL converstion
+18.12.2022: Pbtable Frontend Update, pbtable Backend is completed
