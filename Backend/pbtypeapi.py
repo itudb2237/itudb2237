@@ -10,22 +10,22 @@ if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND
 def get_pbtype_columns():
     pbtypeColumns = [{"name": i[1], "type": "CHAR" if i[2].startswith("CHAR") else i[2]}
                     for i in db.executeSQLQuery("PRAGMA table_info(PBTYPE)").fetchall()]
+    non_key_cols_types = ["PERSON_TYPE", "CROSSWALK_PRESENT", "SIDEWALK_PRESENT", "SCHOOLZONE_PRESENT", "MOTOR_MANEUVER"]
 
-    for i in pbtypeColumns:
-        if i["name"] in ["PERSON_TYPE", "CROSSWALK_PRESENT", "SIDEWALK_PRESENT", "SCHOOLZONE_PRESENT", "MOTOR_MANEUVER"]:
-            i["possibleValues"] = db.executeSQLQuery(f"SELECT DISTINCT {i['name']} FROM PBTYPE ORDER BY {i['name']};").fetchall()
-            if i["possibleValues"][0] == (None,):
-                i["possibleValues"][0] = ("NULL",)
+    for column in pbtypeColumns:
+        
+        if column["name"] in non_key_cols_types:
+            column["possibleValues"] = db.executeSQLQuery(f"SELECT DISTINCT {column['name']} FROM PBTYPE ORDER BY {column['name']};").fetchall()
+            if column["possibleValues"][0] == (None,):
+                column["possibleValues"][0] = ("NULL",)
             else:
-                i["possibleValues"].insert(0, ("NULL",))
-            i["possibleValues"].insert(1, ("NOT NULL",))
-            i["possibleValues"].insert(0, ("All Values",))
+                column["possibleValues"].insert(0, ("NULL",))
+            column["possibleValues"].insert(1, ("NOT NULL",))
+            column["possibleValues"].insert(0, ("All Values",))
     
     return pbtypeColumns
 
 pbtypeColumns = get_pbtype_columns()
-print(pbtypeColumns)
-
 
 @app.route('/getPbtypeHeader', methods=['GET'])
 def getPbtypeHeaders():
@@ -132,7 +132,7 @@ def getPbtype(case_number, vehicle_number, person_number):
 def addPbtype():
     data = request.form
     query = f"INSERT INTO PBTYPE ({', '.join([i['name'] for i in pbtypeColumns])}) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-    print(tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in pbtypeColumns]))
+    
     db.executeSQLQuery(query, tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in pbtypeColumns]))
     return "OK", 204
 
@@ -148,7 +148,7 @@ def updatePbtype():
     return "OK", 204
 
 
-@app.route('/deletePbtype/<int:case_number>/<int:vehicle_number>/<int:person_number>', methods=['DELETE'])
+@app.route('/deletePbtype/<int:case_number>/<int:vehicle_number>/<int:person_number>', methods=['POST'])
 def deletePbtype(case_number, vehicle_number, person_number):
     db.executeSQLQuery("DELETE FROM PBTYPE WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ? AND PERSON_NUMBER = ?", (case_number, vehicle_number, person_number))
     return "OK", 204
