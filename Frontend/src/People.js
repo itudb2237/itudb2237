@@ -19,7 +19,7 @@ export function AddPersonOverlay(props) {
 		>
 			<form
 				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
-				action={url + "/addPerson"} method={"POST"}
+				action={url + "/addPerson"} method={"POST"} onSubmit={props.onSubmit}
 			>
 				{props.allColumns.map((column) => {
 					return (

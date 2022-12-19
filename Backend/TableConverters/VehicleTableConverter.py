@@ -22,7 +22,7 @@ ValueMappings = {"HIT_RUN" : {"0": "\"No\"",
                             "7": "\"Dodge\"",
                             "8": "\"Imperial\"",
                             "9": "\"Plymouth\"",
-                            "10": "\"Eagle (Since 1988)\"",
+                            "10": "\"Eagle\"",
                             "12": "\"Ford\"",
                             "13": "\"Lincoln\"",
                             "14": "\"Mercury\"",
@@ -32,11 +32,15 @@ ValueMappings = {"HIT_RUN" : {"0": "\"No\"",
                             "21": "\"Oldsmobile\"",
                             "22": "\"Pontiac\"",
                             "23": "\"GMC\"",
+                            "24": "\"Saturn\"",
+                            "25": "\"Grumman\"",
+                            "26": "\"Coda\"",
                             "29": "\"Other Domestic\"",
                             "30": "\"Volkswagen\"",
                             "31": "\"Alfa Romeo\"",
                             "32": "\"Audi\"",
                             "33": "\"Austin-Healey\"",
+                            "34": "\"BMW\"",
                             "35": "\"Datsun\"",
                             "36": "\"Fiat\"",
                             "37": "\"Honda\"",
@@ -54,10 +58,13 @@ ValueMappings = {"HIT_RUN" : {"0": "\"No\"",
                             "49": "\"Toyota\"",
                             "50": "\"Triumph\"",
                             "51": "\"Volvo\"",
-                            "52": "\"Mitsubishi (Since 1982)\"",
-                            "53": "\"Suzuki (Since 1987)\"",
-                            "57": "\"Lexus (Since 1988)\"",
-                            "58": "\"Infiniti (Since 1988)\"",
+                            "52": "\"Mitsubishi\"",
+                            "53": "\"Suzuki\"",
+                            "54": "\"Acura\"",
+                            "55": "\"Hyundai\"",
+                            "56": "\"Merkur\"",
+                            "57": "\"Lexus\"",
+                            "58": "\"Infiniti\"",
                             "59": "\"Other Imports\"",
                             "60": "\"BSA\"",
                             "61": "\"Ducati\"",
@@ -65,9 +72,19 @@ ValueMappings = {"HIT_RUN" : {"0": "\"No\"",
                             "63": "\"Kawasaki\"",
                             "64": "\"Moto Guzzi\"",
                             "65": "\"Norton\"",
+                            "66": "\"Mahindra\"",
                             "67": "\"Yamaha\"",
                             "69": "\"Other Motor Cycle\"",
                             "70": "\"Moped\"",
+                            "71": "\"Ducati\"",
+                            "72": "\"Harley-Davidson\"",
+                            "73": "\"Kawasaki\"",
+                            "74": "\"Moto Guzzi\"",
+                            "75": "\"Norton\"",
+                            "76": "\"Yamaha\"",
+                            "77": "\"Victory\"",
+                            "78": "\"Other Make Moped\"",
+                            "79": "\"Other Make Motored Cycle\"",
                             "80": "\"Brockway\"",
                             "81": "\"Diamond Reo\"",
                             "82": "\"Freightliner\"",
@@ -77,33 +94,43 @@ ValueMappings = {"HIT_RUN" : {"0": "\"No\"",
                             "86": "\"Mack\"",
                             "87": "\"Peterbilt\"",
                             "88": "\"White\"",
+                            "89": "\"White/Autocar\"",
+                            "90": "\"Bluebird\"",
+                            "91": "\"Eagle Coach\"",
+                            "92": "\"Gillig\"",
+                            "93": "\"MCI\"",
+                            "94": "\"Thomas Built\"",
                             "95": "\"Other Truck/Bus\"",
+                            "97": "\"Not Reported\"",
                             "98": "\"Other Make\"",
                             "99": "\"Unknown Make\""
                         }
                         }
 
-def createAndFillVehicleTable(dbpath):
-    vehicles = csv.DictReader(open("./TableConverters/vehicle.csv"))
-
+def createAndFillVehicleTable():
+    
+    dbpath = "database.db"
     connection = sqlite3.connect(dbpath)
-    cursor = db.cursor()
+    cursor = connection.cursor()
 
-    cursor.execute("""CREATE TABLE IF NOTE EXISTS VEHICLE(
+    
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS VEHICLE(
         CASE_NUMBER INTEGER NOT NULL,
-        VEHICLE_NO INTEGER NOT NULL,
+        VEHICLE_NUMBER INTEGER NOT NULL,
         NUMBER_OF_OCCUPANTS INTEGER NOT NULL,
-        HIT_RUN CHAR(10) NOT NULL,
+        HIT_RUN VARCHAR(10) NOT NULL,
         OWNER VARCHAR(100) NOT NULL,
         MAKE VARCHAR(50) NOT NULL,
         MODEL_YEAR INTEGER NOT NULL,
 
-        PRIMARY KEY (CASE_NUMBER, VEHICLE_NO))
+        PRIMARY KEY (CASE_NUMBER, VEHICLE_NUMBER))
     """)
 
+    
+    vehicles = csv.DictReader(open("./TableConverters/vehicle.csv"))
     for vehicle in vehicles:
-        cursor.execute(f"INSERT INTO VEHICLE (CASE_NUMBER, VEHICLE_NO, NUMBER_OF_OCCUPANTS, HIT_RUN, OWNER, MAKE, MODEL_YEAR) VALUES ({vehicle["ST_CASE"]},{vehicle["VEH_NO"]},{vehicle["NUMOCCS"]},{ValueMappings["HIT_RUN"][vehicle["HIT_RUN"]]},{ValueMappings["OWNER"][vehicle["OWNER"]]},{ValueMappings["MAKE"][vehicle["MAKE"]]},{vehicle["MOD_YEAR"]})")
-
+        cursor.execute(f"INSERT INTO VEHICLE (CASE_NUMBER, VEHICLE_NUMBER, NUMBER_OF_OCCUPANTS, HIT_RUN, OWNER, MAKE, MODEL_YEAR) VALUES ({int(vehicle['ST_CASE'])},{int(vehicle['VEH_NO'])},{int(vehicle['NUMOCCS'])},{ValueMappings['HIT_RUN'][vehicle['HIT_RUN']]},{ValueMappings['OWNER'][vehicle['OWNER']]},{ValueMappings['MAKE'][vehicle['MAKE']]},{int(vehicle['MOD_YEAR'])})")
 
     connection.commit()
     connection.close()
