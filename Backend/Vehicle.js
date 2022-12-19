@@ -109,3 +109,65 @@ export function UpdateVehicleOverlay(props) {
 		</OverlayPage>
 	);
 }
+
+export function Vehicles(){
+	// Variable declarations
+	let [page, setPage] = useState(1);
+	let [order, setOrder] = useState("ASC");
+	let [reload, setReload] = useState(false);
+	let [columns, setColumns] = useState([{}]);
+	let [caseView, setCaseView] = useState([]);
+	let [vehicle, setVehicleView] = useState([]);
+	let [updateVehicle, setUpdateVehicle] = useState([]);
+	let [entryPerPage, setEntryPerPage] = useState(100);
+	let [orderBy, setOrderBy] = useState("CASE_NUMBER");
+	let [requestedColumns, setRequestedColumns] = useState([]);
+	let [response, setResponse] = useState({"data": [], maxPageCount:0})
+	let [isAddVehicleOverlayOpen, setIsAddVehicleOverlayOpen] = useState(false);
+	// Runs once on page load
+	useEffect(() => {
+		fetchAndWrite(setColumns, url + "/getVehicleHeader").then((resp) => {
+			setRequestedColumns(resp);
+		})
+	}, [])
+	// Runs when page, entryPerPage, or requestedColumns changes (i.e. when the table needs to be updated) or when the page is first loaded
+	useEffect(() => {
+		let filters = (requestedColumns.filter(a => a["filter"] != null && (a["type"] != "INTEGER" || a["filter"].every(b => b != ""))).map(a => {
+			if(a["type"] == "INTEGER"){
+				return "filter" + a["name"] + "=" + a["filter"].join(",");
+			}
+			return "filter" + a["name"] + "=" + a["filter"] })).join("&")
+		fetchAndWrite(setResponse, url + "/getVehicles?pageNumber=" + page + "&rowPerPage=" + entryPerPage +
+			(requestedColumns.length != 0 ? "&requestedColumns=" + requestedColumns.map(a => a["name"]).join(",") : "")
+			+ (filters.length > 0 ? "&" + filters : "") + "&orderBy=" + orderBy + "&order=" + order)
+	} , [page, entryPerPage, requestedColumns, order, orderBy, reload])
+	return (
+		<>
+			<h1>Vehicles Table Page</h1>
+			{isAddVehicleOverlayOpen && <AddVehicleOverlay setTrigger={setIsAddVehicleOverlayOpen} allColumns={columns}/>}
+			{updateVehicle.length != 0 && <UpdateVehicleOverlay setTrigger={setUpdateVehicle} allColumns={columns} vehicleData={updateVehicle}/>}
+			<button style={{float: "right"}} onClick={() => setIsAddVehicleOverlayOpen(true)}>Add Vehicle</button>
+			<TableManager
+				page={page}
+				pageCount={response.maxPageCount}
+				setPage={setPage}
+				entryPerPage={entryPerPage}
+				setEntryPerPage={setEntryPerPage}
+				allColumns={columns}
+				requestedColumns={requestedColumns}
+				setRequestedColumns={setRequestedColumns}
+				orderBy={orderBy}
+				setOrderBy={setOrderBy}
+				order={order}
+				setOrder={setOrder}
+				reload={reload}
+				setReload={setReload}
+			/>
+			<Table
+				header={requestedColumns}
+				setHeader={setRequestedColumns}
+				data={response.data}
+				foreignKeys={{CASE_NUMBER: setCaseView, VEHICLE_NUMBER: setUpdateVehicle}}
+			/>
+		</>);
+}
