@@ -19,7 +19,7 @@ export function AddPbtypeOverlay(props) {
 		>
 			<form
 				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
-				action={url + "/addPbtype"} method={"POST"}
+				action={url + "/addPbtype"} method={"POST"} onSubmit={props.onSubmit}
 			>
 				{props.allColumns.map((column) => {
 					return (
