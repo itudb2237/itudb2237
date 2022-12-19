@@ -163,6 +163,10 @@ def updateParkwork():
                        (data["FIRST_HARMFUL_EVENT"], data["CARGO_BODY_TYPE"], data["SPECIAL_USE"], data["EXTENT_OF_DAMAGE"], int(data["DEATHS"]) if data["DEATHS"] else None, int(data["CASE_NUMBER"]), int(data["VEHICLE_NUMBER"])))
     return "OK", 204
 
+@app.route('/deleteParkwork/<int:case_number>/<int:vehicle_number>', methods=['POST'])
+def deleteParkwork(case_number, vehicle_number):
+    db.executeSQLQuery(f"DELETE FROM PARKWORK WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ?", (case_number, vehicle_number))
+    return "OK", 204
 
 if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PARKWORK'").fetchall():
     parkworkTableConverter.createFillTableParkwork(db)
