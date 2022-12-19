@@ -69,7 +69,7 @@ export function AddAccident(){
 					setTrigger={setAddPbtypeOverlayVisible}
 					onSubmit={(event) => {
 						event.preventDefault();
-						setParkworks([...pbtypes, new FormData(event.target)]);
+						setPbtypes([...pbtypes, new FormData(event.target)]);
 						return false;
 					}}
 				/>}
@@ -130,7 +130,7 @@ export function AddAccident(){
 						}catch{
 							return [];
 						}})()}/>
-								<h2 style={{display: "inline"}}>People</h2>
+								<h2 style={{display: "inline"}}>Pbtypes</h2>
 				<button onClick={() => setAddPbtypeOverlayVisible(true)} style={{float: "right", display: "inline"}}>Add Pbtype</button>
 				<Table
 					header={pbtypesHeaders}
