@@ -2,6 +2,7 @@ import {Table} from "./Table";
 import {useEffect, useState} from "react";
 import {AddPersonOverlay} from "./People";
 import {default as url} from "./backendurl";
+import { AddParkworkOverlay } from "./Parkworks";
 
 
 async function fetchAndWrite(setValue, requestUrl) {
@@ -13,6 +14,7 @@ async function fetchAndWrite(setValue, requestUrl) {
 export function AddAccident(){
 	let [people, setPeople] = useState([]);
 	let [peopleHeaders, setPeopleHeaders] = useState([]);
+	let [parkworkHeaders, setParkworkHeaders] = useState([]);
 	let [pbtypes, setPbtypes] = useState([]);
 	let [cevents, setCevents] = useState([]);
 	let [vehicles, setVehicles] = useState([]);
@@ -25,6 +27,7 @@ export function AddAccident(){
 
 	useEffect(() => {
 		fetchAndWrite(setPeopleHeaders, url + "/getPersonHeader");
+		fetchAndWrite(setParkworkHeaders, url + "/getParkworkHeader");
 	}, []);
 
 	return (
@@ -40,6 +43,16 @@ export function AddAccident(){
 						return false;
 					}}
 				/>}
+			{isAddParkworkOverlayVisible &&
+				<AddParkworkOverlay
+					allColumns={parkworkHeaders}
+					setTrigger={setAddParkworkOverlayVisible}
+					onSubmit={(event) => {
+						event.preventDefault();
+						setParkworks([...parkworks, new FormData(event.target)]);
+						return false;
+					}}
+				/>}
 			<form>
 				<h2>People</h2>
 			</form>
@@ -48,18 +61,25 @@ export function AddAccident(){
 				header={peopleHeaders}
 				data={(()=>{
 					try{
-						console.log(people)
-						console.log(Object.values(Object.fromEntries(people[0].entries())));
-						console.log(people.map(a => Object.fromEntries(a.entries())))
 						return people.map(a => Object.values(Object.fromEntries(a.entries())));
 					}catch{
 						return [];
 					}})()}/>
+			<h2>Parkwork</h2>
+			<button onClick={() => setAddParkworkOverlayVisible(true)} style={{float: "right", display: "inline"}}>Add Parkwork</button>
+			<Table
+				header={parkworkHeaders}
+				data={(()=>{
+					try{
+						return parkworks.map(a => Object.values(Object.fromEntries(a.entries())));
+					}catch{
+						return [];
+					}})()}/>
 			<button onClick={() => {
-				for (let person of people){
-					fetch(url + "/addPerson", {
+				for (let parkwork of parkworks){
+					fetch(url + "/addParkwork", {
 						method: "POST",
-						body: person
+						body: parkwork
 					});
 				}
 			}} style={{float: "right", display: "inline"}}>Add Accident</button>

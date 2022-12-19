@@ -109,7 +109,7 @@ export function Table(props){
                 {data.map((v, i) => <tr key={i} style={rowStyle}>
                     {v.map((j, i2) =>{
                         console.log(requestedColumns)
-                        if(i2 < requestedColumns.length && requestedColumns[i2]["name"] in props.foreignKeys){
+                        if(i2 < requestedColumns.length && requestedColumns[i2]["name"] in (props.foreignKeys ?? [])){
                             return (
                             <td key={String(i) + "." + i2} style={cellStyle}>
                                 <button
