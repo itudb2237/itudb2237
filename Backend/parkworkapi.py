@@ -153,6 +153,15 @@ def addParkwork():
     db.executeSQLQuery(query, tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in parkwork_attributes]))
     return "OK", 204
 
+@app.route('/updateParkwork', methods=['POST'])
+def updateParkwork():
+    data = dict(flask.request.form)
+    for i in data.keys():
+        if data[i] == "NULL" or data[i] == "":
+            data[i] = None
+    db.executeSQLQuery(f"UPDATE PARKWORK SET FIRST_HARMFUL_EVENT = ?, CARGO_BODY_TYPE = ?, SPECIAL_USE = ?,EXTENT_OF_DAMAGE = ?, DEATHS = ? WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ?",
+                       (data["FIRST_HARMFUL_EVENT"], data["CARGO_BODY_TYPE"], data["SPECIAL_USE"], data["EXTENT_OF_DAMAGE"], int(data["DEATHS"]) if data["DEATHS"] else None, int(data["CASE_NUMBER"]), int(data["VEHICLE_NUMBER"])))
+    return "OK", 204
 
 
 if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PARKWORK'").fetchall():
