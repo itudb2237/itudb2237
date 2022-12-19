@@ -10,6 +10,34 @@ async function fetchAndWrite(setValue, requestUrl) {
     return resp;
 }
 
+export function AddAccidentForm(props){
+    return (<form
+        style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
+        action={url + "/addAccident"} method={"POST"} onSubmit={props.onSubmit}
+    >
+        {props.allColumns.map((column) => {
+            return (
+                <div key={column["name"]+"_input_div"}>
+                    <label style={{display: "inline"}} key={column["name"]+"_label"}>{column["name"] + ": "}</label>
+                    {column["type"] == "INTEGER" ?
+                        <input type="number" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
+                        (column["possibleValues"] == null ?
+                                <input type="text" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
+                                <select name={column["name"]} style={{display: "inline"}} key={column["name"]+"_select"}>
+                                    {["NULL", ...column["possibleValues"].slice(3)].map((value) => {
+                                        return <option value={value} key={value+"_option"}>{value}</option>
+                                    })}
+                                </select>
+                        )
+                    }
+                </div>
+            )
+        })}
+        {props.children}
+        <input type="submit" value="Submit"/>
+    </form>)
+}
+
 export function AddAccidentOverlay(props) {
 
     return (
@@ -17,30 +45,7 @@ export function AddAccidentOverlay(props) {
             setTrigger={props.setTrigger}
             triggerNewValue={false}
         >
-            <form
-                style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
-                action={url + "/addAccident"} method={"POST"}
-            >
-                {props.allColumns.map((column) => {
-                    return (
-                        <div key={column["name"]+"_input_div"}>
-                            <label style={{display: "inline"}} key={column["name"]+"_label"}>{column["name"] + ": "}</label>
-                            {column["type"] == "INTEGER" ?
-                                <input type="number" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
-                                (column["possibleValues"] == null ?
-                                        <input type="text" name={column["name"]} style={{display: "inline"}} key={column["name"]+"_input"}/> :
-                                        <select name={column["name"]} style={{display: "inline"}} key={column["name"]+"_select"}>
-                                            {["NULL", ...column["possibleValues"].slice(3)].map((value) => {
-                                                return <option value={value} key={value+"_option"}>{value}</option>
-                                            })}
-                                        </select>
-                                )
-                            }
-                        </div>
-                    )
-                })}
-                <input type="submit" value="Submit"/>
-            </form>
+            <AddAccidentForm allColumns={props.allColumns} onSubmit={props.onSubmit} formRef={props.formRef}/>
         </OverlayPage>
     );
 }
