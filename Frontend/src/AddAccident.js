@@ -4,6 +4,7 @@ import {AddPersonOverlay} from "./People";
 import {default as url} from "./backendurl";
 import { AddParkworkOverlay } from "./Parkworks";
 import { AddAccidentForm} from "./Accidents";
+import { AddPbtypeOverlay} from "./Pbtypes";
 
 
 async function fetchAndWrite(setValue, requestUrl) {
@@ -17,6 +18,7 @@ export function AddAccident(){
 	let [peopleHeaders, setPeopleHeaders] = useState([]);
 	let [parkworkHeaders, setParkworkHeaders] = useState([]);
 	let [accidentHeaders, setAccidentHeaders] = useState([]);
+	let [pbtypesHeaders, setPbtypeHeaders] = useState([]);
 	let [pbtypes, setPbtypes] = useState([]);
 	let [cevents, setCevents] = useState([]);
 	let [vehicles, setVehicles] = useState([]);
@@ -25,12 +27,12 @@ export function AddAccident(){
 	let [isAddPbtypeOverlayVisible, setAddPbtypeOverlayVisible] = useState(false);
 	let [isAddCeventOverlayVisible, setAddCeventOverlayVisible] = useState(false);
 	let [isAddVehicleOverlayVisible, setAddVehicleOverlayVisible] = useState(false);
-	let [isAddParkworkOverlayVisible, setAddParkworkOverlayVisible] = useState(false);
-
+	
 	useEffect(() => {
 		fetchAndWrite(setPeopleHeaders, url + "/getPersonHeader");
 		fetchAndWrite(setParkworkHeaders, url + "/getParkworkHeader");
 		fetchAndWrite(setAccidentHeaders, url + "/getAccidentHeader");
+		fetchAndWrite(setPbtypeHeaders, url + "/getPbtypeHeader");
 	}, []);
 
 	return (
@@ -56,6 +58,16 @@ export function AddAccident(){
 						return false;
 					}}
 				/>}
+			{isAddPbtypeOverlayVisible &&
+				<AddPbtypeOverlay
+					allColumns={pbtypesHeaders}
+					setTrigger={setAddPbtypeOverlayVisible}
+					onSubmit={(event) => {
+						event.preventDefault();
+						setParkworks([...pbtypes, new FormData(event.target)]);
+						return false;
+					}}
+				/>}
 			<AddAccidentForm onSubmit={() => {
 				for (let person of people){
 					fetch(url + "/addPerson", {
@@ -67,6 +79,12 @@ export function AddAccident(){
 					fetch(url + "/addParkwork", {
 						method: "POST",
 						body: parkwork
+					});
+				}
+				for (let pbtype of pbtypes){
+					fetch(url + "/addPbtype", {
+						method: "POST",
+						body: pbtype
 					});
 				}
 			}}
@@ -88,6 +106,16 @@ export function AddAccident(){
 					data={(()=>{
 						try{
 							return parkworks.map(a => Object.values(Object.fromEntries(a.entries())));
+						}catch{
+							return [];
+						}})()}/>
+								<h2 style={{display: "inline"}}>People</h2>
+				<button onClick={() => setAddPbtypeOverlayVisible(true)} style={{float: "right", display: "inline"}}>Add Pbtype</button>
+				<Table
+					header={pbtypesHeaders}
+					data={(()=>{
+						try{
+							return pbtypes.map(a => Object.values(Object.fromEntries(a.entries())));
 						}catch{
 							return [];
 						}})()}/>
