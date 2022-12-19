@@ -19,10 +19,6 @@ for i in ceventColumns:
             i["possibleValues"].insert(0, ("NULL",))
         i["possibleValues"].insert(1, ("NOT NULL",))
         i["possibleValues"].insert(0, ("All Values",))
-print()
-print()
-print()
-print()
 
 print(ceventColumns)
 
@@ -38,8 +34,8 @@ def getCeventHeaders():
 
 @app.route('/getCevents', methods=['GET'])
 def getCevents():
-#    if not requestchecker(request.remote_addr, db):
-#        return "Too many requests", 429
+    if not requestchecker(request.remote_addr, db):
+        return "Too many requests", 429
 
     rowperpage = request.args.get('rowPerPage', default=100, type=int)
 
@@ -141,7 +137,7 @@ def updateCevent():
     return "OK", 204
 
 
-@app.route('/deleteCevent/<int:case_number>/<int:event_number>', methods=['DELETE'])
+@app.route('/deleteCevent/<int:case_number>/<int:event_number>', methods=['POST'])
 def deleteCevent(case_number, event_number):
     db.executeSQLQuery(f"DELETE FROM CEVENT WHERE CASE_NUMBER = ? AND EVENT_NUMBER = ?", (case_number, event_number))
     return "OK", 204

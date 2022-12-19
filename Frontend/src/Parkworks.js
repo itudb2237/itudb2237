@@ -18,7 +18,7 @@ export function AddParkworkOverlay(props) {
 		>
 			<form
 				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
-				action={url + "/addParkwork"} method={"POST"}
+				action={url + "/addParkwork"} method={"POST"} onSubmit={props.onSubmit}
 			>
 				{props.allColumns.map((column) => {
 					return (

@@ -148,7 +148,7 @@ def updatePbtype():
     return "OK", 204
 
 
-@app.route('/deletePbtype/<int:case_number>/<int:vehicle_number>/<int:person_number>', methods=['DELETE'])
+@app.route('/deletePbtype/<int:case_number>/<int:vehicle_number>/<int:person_number>', methods=['POST'])
 def deletePbtype(case_number, vehicle_number, person_number):
     db.executeSQLQuery("DELETE FROM PBTYPE WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ? AND PERSON_NUMBER = ?", (case_number, vehicle_number, person_number))
     return "OK", 204
