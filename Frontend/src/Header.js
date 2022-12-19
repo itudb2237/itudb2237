@@ -24,6 +24,7 @@ export function Header(){
             <a href={"./vehicles"} style={buttonStyle}>Vehicles</a>
             <a href={"./parkworks"} style={buttonStyle}>Parkworks</a>
             <a href={"./pbtypes"} style={buttonStyle}>PbTypes</a>
+            <a href={"./add_accident"} style={buttonStyle}>Add Accident</a>
         </header>
     );
 }
