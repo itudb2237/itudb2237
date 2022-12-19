@@ -19,7 +19,7 @@ export function AddCeventOverlay(props) {
 		>
 			<form
 				style={{display: "flex",justifyContent: "space-between", flexDirection: "column", height: "100%"}}
-				action={url + "/addCevent"} method={"POST"}
+				action={url + "/addCevent"} method={"POST"} onSubmit={props.onSubmit}
 			>
 				{props.allColumns.map((column) => {
 					return (

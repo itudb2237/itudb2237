@@ -4,6 +4,7 @@ import {AddPersonOverlay} from "./People";
 import {default as url} from "./backendurl";
 import { AddParkworkOverlay } from "./Parkworks";
 import { AddAccidentForm} from "./Accidents";
+import { AddCeventOverlay } from "./Cevents";
 
 
 async function fetchAndWrite(setValue, requestUrl) {
@@ -17,6 +18,7 @@ export function AddAccident(){
 	let [peopleHeaders, setPeopleHeaders] = useState([]);
 	let [parkworkHeaders, setParkworkHeaders] = useState([]);
 	let [accidentHeaders, setAccidentHeaders] = useState([]);
+	let [ceventsHeaders, setCeventsHeaders] = useState([]);
 	let [pbtypes, setPbtypes] = useState([]);
 	let [cevents, setCevents] = useState([]);
 	let [vehicles, setVehicles] = useState([]);
@@ -31,6 +33,7 @@ export function AddAccident(){
 		fetchAndWrite(setPeopleHeaders, url + "/getPersonHeader");
 		fetchAndWrite(setParkworkHeaders, url + "/getParkworkHeader");
 		fetchAndWrite(setAccidentHeaders, url + "/getAccidentHeader");
+		fetchAndWrite(setCeventsHeaders, url + "/getCeventHeader");
 	}, []);
 
 	return (
@@ -56,6 +59,16 @@ export function AddAccident(){
 						return false;
 					}}
 				/>}
+			{isAddCeventOverlayVisible &&
+				<AddCeventOverlay
+					allColumns={ceventsHeaders}
+					setTrigger={setAddCeventOverlayVisible}
+					onSubmit={(event) => {
+						event.preventDefault();
+						setCevents([...cevents, new FormData(event.target)]);
+						return false;
+					}}
+				/>}
 			<AddAccidentForm onSubmit={() => {
 				for (let person of people){
 					fetch(url + "/addPerson", {
@@ -67,6 +80,12 @@ export function AddAccident(){
 					fetch(url + "/addParkwork", {
 						method: "POST",
 						body: parkwork
+					});
+				}
+				for (let cevent of cevents){
+					fetch(url + "/addCevent", {
+						method: "POST",
+						body: cevent
 					});
 				}
 			}}
@@ -88,6 +107,16 @@ export function AddAccident(){
 					data={(()=>{
 						try{
 							return parkworks.map(a => Object.values(Object.fromEntries(a.entries())));
+						}catch{
+							return [];
+						}})()}/>
+				<h2 style={{display: "inline"}}>Cevents</h2>
+				<button onClick={() => setAddCeventOverlayVisible(true)} style={{float: "right", display: "inline"}}>Add Cevent</button>
+				<Table
+					header={ceventsHeaders}
+					data={(()=>{
+						try{
+							return cevents.map(a => Object.values(Object.fromEntries(a.entries())));
 						}catch{
 							return [];
 						}})()}/>
