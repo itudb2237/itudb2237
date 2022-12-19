@@ -6,7 +6,9 @@ import { Cevents } from "./Cevents";
 import { Vehicles } from "./Vehicles";
 import { Parkworks } from "./Parkworks";
 import { Pbtypes } from "./Pbtypes";
+import { VehAuxes } from "./VehAuxes";
 import { AddAccident } from "./AddAccident";
+
 
 
 export function App(){
@@ -21,6 +23,7 @@ export function App(){
                     <Route path="/vehicles" element={<Vehicles/>}/>
                     <Route path="/parkworks" element={<Parkworks/>}/>
                     <Route path="/pbtypes" element={<Pbtypes/>}/>
+                    <Route path="/vehAuxes" element={<VehAuxes/>}/>
                     <Route path="/add_accident" element={<AddAccident/>}/>
                 </Routes>
             </BrowserRouter>

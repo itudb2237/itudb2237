@@ -2,7 +2,7 @@ import csv
 import pandas as pd
 import sqlite3 as dbapi2
 import os
-from valueMapsVehAux import ValueMappings, HeadMappings
+from TableConverters.valueMapsVehAux import ValueMappings, HeadMappings
 
 columns_csv = ['ST_CASE', 'VEH_NO']+ [k for k in HeadMappings]
 revMap = {v: k for k,v in HeadMappings.items()}
@@ -21,7 +21,7 @@ class CSVtoDb:
     def add_vehAuxData_fromCSV(self, data):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = """INSERT INTO VEHICLE_AUX (CASE_NUMBER, VEHICLE_NUMBER, VEHICLE_BODY_TYPE, MOTORCYCLE_LICENSE_STATUS, SCHOOL_BUS, SPEEDING_VEHICLE, ROLLOVER) VALUES(?,?,?,?,?,?,?)"""
+            query = """INSERT INTO VEH_AUX (CASE_NUMBER, VEHICLE_NUMBER, VEHICLE_BODY_TYPE, MOTORCYCLE_LICENSE_STATUS, SCHOOL_BUS, SPEEDING_VEHICLE, ROLLOVER) VALUES(?,?,?,?,?,?,?)"""
             values = (int(data["ST_CASE"]), int(data["VEH_NO"]), self.accessMap("VEHICLE_BODY_TYPE", data), self.accessMap("MOTORCYCLE_LICENSE_STATUS", data), self.accessMap("SCHOOL_BUS", data), self.accessMap("SPEEDING_VEHICLE", data), self.accessMap("ROLLOVER", data))
             cursor.execute(query, values)
             connection.commit()
@@ -41,10 +41,10 @@ def createAndFillVehicleAuxillaryTable():
     # SQL queries on a database table
     cursor = connection.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS VEHICLE_AUX")
+    cursor.execute("DROP TABLE IF EXISTS VEH_AUX")
 
     # Table Definition
-    create_table = """CREATE TABLE VEHICLE_AUX(
+    create_table = """CREATE TABLE VEH_AUX(
     CASE_NUMBER INTEGER NOT NULL,
     VEHICLE_NUMBER INTEGER NOT NULL,
     VEHICLE_BODY_TYPE CHAR(70)  NULL,
@@ -75,7 +75,7 @@ def createAndFillVehicleAuxillaryTable():
         db.add_vehAuxData_fromCSV(content.iloc[i, :])
 
     # selection query
-    select_all = "SELECT * FROM VEHICLE_AUX"
+    select_all = "SELECT * FROM VEH_AUX"
     rows = cursor.execute(select_all).fetchall()
     
     # Output to the console screen
