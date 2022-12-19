@@ -14,7 +14,7 @@ if __name__ == "__main__":
     )"""
     db.executeSQLQuery(statement)
 
-    import veh_auxapi
+    import parkworkapi, veh_auxapi, pbtypeapi, personapi, ceventapi, vehicleapi, accidentsapi
 
     @app.route("/", defaults={'path': ''})
     @app.route("/<path:path>")
