@@ -27,6 +27,9 @@ def getHeadersParkwork():
 
 @app.route('/getParkworks', methods=['GET'])
 def getParkworks():
+    if not flask.requestchecker(flask.request.remote_addr, db):
+        return "Too many requests", 429
+
     num_of_row_per_page = flask.request.args.get('rowPerPage', default=100, type=int)
     page_number = flask.request.args.get('pageNumber', default=1, type=int)
     requested_columns = flask.request.args.get('requestedColumns', default=",".join(map(lambda x: x["name"], parkwork_attributes)), type=str).split(",")
