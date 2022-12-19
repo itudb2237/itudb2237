@@ -115,3 +115,28 @@ def getVehicle(case_number, vehicle_number):
     response.headers['Access-Control-Allow-Methods'] = 'GET'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return response
+
+@app.route('/addVehicle', methods=['POST'])
+def addVehicle():
+    data = request.form
+    query = f"INSERT INTO VEHICLE ({', '.join([i['name'] for i in vehicleColumns])}) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    print(tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "VARCHAR" else int(data[i["name"]])) for i in vehicleColumns]))
+    db.executeSQLQuery(query, tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "VARCHAR" else int(data[i["name"]])) for i in vehicleColumns]))
+    return "OK", 204
+
+
+@app.route('/updateVehicle', methods=['POST'])
+def updateVehicle():
+    data = dict(request.form)
+    for i in data.keys():
+        if data[i] == "NULL" or data[i] == "":
+            data[i] = None
+    db.executeSQLQuery(f"UPDATE VEHICLE SET NUMBER_OF_OCCUPANTS = ?, HIT_RUN = ?, OWNER = ?,MAKE = ?, MODEL_YEAR = ? WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ?",
+                       (int(data["NUMBER_OF_OCCUPANTS"]) if data["NUMBER_OF_OCCUPANTS"] else None, data["HIT_RUN"], data["OWNER"], data["MAKE"], int(data["MODEL_YEAR"]) if data["MODEL_YEAR"] else None, int(data["CASE_NUMBER"]), int(data["VEHICLE_NUMBER"])))
+    return "OK", 204
+
+
+@app.route('/deleteVehicle/<int:case_number>/<int:vehicle_number>', methods=['POST'])
+def deleteVehicle(case_number, vehicle_number):
+    db.executeSQLQuery(f"DELETE FROM VEHICLE WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ?", (case_number, vehicle_number))
+    return "OK", 204
