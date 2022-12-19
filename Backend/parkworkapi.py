@@ -2,6 +2,7 @@ from __main__ import app, db
 
 import flask
 import TableConverters.parkworkTableConverter as parkworkTableConverter
+from iprequestchecker import requestchecker
 
 
 parkwork_attributes = []
@@ -27,7 +28,7 @@ def getHeadersParkwork():
 
 @app.route('/getParkworks', methods=['GET'])
 def getParkworks():
-    if not flask.requestchecker(flask.request.remote_addr, db):
+    if not requestchecker(flask.request.remote_addr, db):
         return "Too many requests", 429
 
     num_of_row_per_page = flask.request.args.get('rowPerPage', default=100, type=int)
