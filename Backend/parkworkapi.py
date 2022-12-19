@@ -123,7 +123,7 @@ def getParkworks():
     additional_statement += f" ORDER BY {orderBy}"            
 
     results = {
-        "data": db.executeSQLQuery(statement + additional_statement +  f" LIMIT {(page_number - 1) * num_of_row_per_page + 1}, {num_of_row_per_page}").fetchall(),
+        "data": db.executeSQLQuery(statement + additional_statement +  f" LIMIT {(page_number - 1) * num_of_row_per_page}, {num_of_row_per_page}").fetchall(),
         "header": [i[1] for i in db.executeSQLQuery("PRAGMA table_info(PARKWORK)").fetchall()],
         "maxPageCount": int((count + num_of_row_per_page - 1) / num_of_row_per_page)
     }
@@ -133,6 +133,36 @@ def getParkworks():
     resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     resp.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return resp
+
+
+
+@app.route('/getParkwork/<int:case_number>/<int:vehicle_number>')
+def getParkwork(case_number, vehicle_number):
+    results = db.executeSQLQuery(f"SELECT * FROM PARKWORK WHERE CASE_NUMBER = {case_number} AND VEHICLE_NUMBER = {vehicle_number}").fetchall()[0]
+    response = flask.make_response(list(results))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
+@app.route('/addParkwork', methods=['POST'])
+def addParkwork():
+    data = flask.request.form
+    query = f"INSERT INTO PARKWORK ({', '.join([i['name'] for i in parkwork_attributes])}) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    print(tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in parkwork_attributes]))
+    db.executeSQLQuery(query, tuple([None if data[i["name"]] == "NULL" or data[i["name"]] == "" else (data[i["name"]] if i["type"] == "CHAR" else int(data[i["name"]])) for i in parkwork_attributes]))
+    return "OK", 204
+
+@app.route('/updateParkwork', methods=['POST'])
+def updateParkwork():
+    data = dict(flask.request.form)
+    for i in data.keys():
+        if data[i] == "NULL" or data[i] == "":
+            data[i] = None
+    db.executeSQLQuery(f"UPDATE PARKWORK SET FIRST_HARMFUL_EVENT = ?, CARGO_BODY_TYPE = ?, SPECIAL_USE = ?,EXTENT_OF_DAMAGE = ?, DEATHS = ? WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ?",
+                       (data["FIRST_HARMFUL_EVENT"], data["CARGO_BODY_TYPE"], data["SPECIAL_USE"], data["EXTENT_OF_DAMAGE"], int(data["DEATHS"]) if data["DEATHS"] else None, int(data["CASE_NUMBER"]), int(data["VEHICLE_NUMBER"])))
+    return "OK", 204
+
 
 if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PARKWORK'").fetchall():
     parkworkTableConverter.createFillTableParkwork(db)
