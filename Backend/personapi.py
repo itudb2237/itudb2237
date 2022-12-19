@@ -34,8 +34,8 @@ def getHeaders():
 
 @app.route('/getPeople', methods=['GET'])
 def getPeople():
-#    if not requestchecker(request.remote_addr, db):
-#        return "Too many requests", 429
+    if not requestchecker(request.remote_addr, db):
+        return "Too many requests", 429
 
     rowperpage = request.args.get('rowPerPage', default=100, type=int)
 
