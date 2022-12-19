@@ -17,7 +17,7 @@ def requestchecker(ip, db):
     num_of_req = cursor.fetchall()
     num_of_req = num_of_req[0][0]
 
-    if (num_of_req >= 5):
+    if (num_of_req >= 30):
         return False
     else:
         return True

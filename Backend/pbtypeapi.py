@@ -4,6 +4,9 @@ from flask import make_response, request
 from iprequestchecker import requestchecker
 import TableConverters.PBTypeTableConverter as PbtypeTableConverter
 
+if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PBTYPE'").fetchall():
+    PbtypeTableConverter.createAndFillPBTypeTable()
+
 def get_pbtype_columns():
     pbtypeColumns = [{"name": i[1], "type": "CHAR" if i[2].startswith("CHAR") else i[2]}
                     for i in db.executeSQLQuery("PRAGMA table_info(PBTYPE)").fetchall()]
@@ -151,5 +154,3 @@ def deletePbtype(case_number, vehicle_number, person_number):
     return "OK", 204
 
 
-# if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PBTYPE'").fetchall():
-PbtypeTableConverter.createAndFillPBTypeTable()

@@ -4,6 +4,9 @@ from flask import make_response, request
 from iprequestchecker import requestchecker
 import TableConverters.PersonTableConverter as PersonTableConverter
 
+if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PERSON'").fetchall():
+    PersonTableConverter.createAndFillPeopleTable(db.db)
+
 personColumns = [{"name": i[1], "type": "CHAR" if i[2].startswith("CHAR") else i[2]}
                  for i in db.executeSQLQuery("PRAGMA table_info(PERSON)").fetchall()]
 
@@ -31,8 +34,8 @@ def getHeaders():
 
 @app.route('/getPeople', methods=['GET'])
 def getPeople():
-#    if not requestchecker(request.remote_addr, db):
-#        return "Too many requests", 429
+    if not requestchecker(request.remote_addr, db):
+        return "Too many requests", 429
 
     rowperpage = request.args.get('rowPerPage', default=100, type=int)
 
@@ -147,7 +150,3 @@ def updatePerson():
 def deletePerson(case_number, vehicle_number, person_number):
     db.executeSQLQuery(f"DELETE FROM PERSON WHERE CASE_NUMBER = ? AND VEHICLE_NUMBER = ? AND PERSON_NUMBER = ?", (case_number, vehicle_number, person_number))
     return "OK", 204
-
-
-if not db.executeSQLQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='PERSON'").fetchall():
-    PersonTableConverter.createAndFillPeopleTable(db.db)

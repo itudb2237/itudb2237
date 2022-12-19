@@ -1,0 +1,6 @@
+17.11.2022: progress folder created
+17.11.2022: CSV to SQL implemented
+05.12.2022: I added the unique property to the query that created the table and brought back the celegen20.txt file that I caused to be deleted
+05.12.2022: Removed the unique property and convert the lowercase field name to uppercase
+08.12.2022: parkwork class generated, insert and update funtion generated
+09.12.2022: added value mapping to make the parkwork table understandable
